@@ -171,24 +171,6 @@ api.interceptors.response.use(
   }
 );
 
-// export interface Application {
-//   id: number;
-//   company_name: string;
-//   job_title: string;
-//   job_posting_url?: string;
-//   location?: string;
-//   salary_range?: string;
-//   application_date: string;
-//   status: 'saved' | 'applied' | 'interview' | 'offer' | 'rejected' | 'withdrawn';
-//   notes?: string;
-//   resume_url?: string;
-//   cover_letter_url?: string;
-//   resume_content?: string;
-//   cover_letter_content?: string;
-//   timeline_events?: TimelineEvent[];  // Changed from 'timeline' to match Django
-//   created_at: string;
-//   updated_at: string;
-// }
 
 export interface Application {
   id: number;
