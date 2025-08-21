@@ -12,7 +12,9 @@
 //   FiChevronRight,
 //   FiPlus,
 //   FiAlertCircle,
-//   FiArrowUpRight
+//   FiArrowUpRight,
+//   FiMenu,
+//   FiX
 // } from 'react-icons/fi';
 // import ProtectedRoute from '../components/ProtectedRoute';
 // import { useAuth } from '../lib/auth-context';
@@ -22,6 +24,7 @@
 //   const [recentApplications, setRecentApplications] = useState<Application[]>([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState<string | null>(null);
+//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 //   const router = useRouter();
 //   const { logout, user } = useAuth();
 
@@ -70,17 +73,17 @@
 //     gradient: string;
 //     hoverColor: string;
 //   }) => (
-//     <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl border border-white/10 p-6 hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-${hoverColor}-500/20`}>
+//     <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl border border-white/10 p-4 md:p-6 hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-${hoverColor}-500/20`}>
 //       <div className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 blur-xl"></div>
 //       <div className="relative">
-//         <div className="flex items-center justify-between mb-3">
-//           <div className={`p-3 rounded-2xl bg-gradient-to-br ${gradient}`}>
-//             <Icon className="w-6 h-6 text-white" />
+//         <div className="flex items-center justify-between mb-2 md:mb-3">
+//           <div className={`p-2 md:p-3 rounded-2xl bg-gradient-to-br ${gradient}`}>
+//             <Icon className="w-4 h-4 md:w-6 md:h-6 text-white" />
 //           </div>
 //         </div>
 //         <div className="space-y-1">
-//           <p className="text-white/70 text-sm font-medium">{title}</p>
-//           <p className="text-3xl font-bold text-white">{value}</p>
+//           <p className="text-white/70 text-xs md:text-sm font-medium">{title}</p>
+//           <p className="text-xl md:text-3xl font-bold text-white">{value}</p>
 //         </div>
 //       </div>
 //     </div>
@@ -110,34 +113,41 @@
 //   return (
 //     <ProtectedRoute>
 //       <Layout>
-//         <div className="flex-1 px-4 py-6 space-y-8">
+//         <div className="flex-1 px-3 sm:px-4 py-4 sm:py-6 space-y-6 md:space-y-8">
 //           {/* Header */}
-//           <div className="flex items-center justify-between">
+//           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 //             <div>
-//               <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-2">
+//               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-2">
 //                 Dashboard Overview
 //               </h1>
-//               <p className="text-white/60">Track your job search progress and recent applications</p>
+//               <p className="text-white/60 text-sm md:text-base">Track your job search progress and recent applications</p>
 //             </div>
-//             <div className="flex gap-4">
+//             <div className="flex gap-2 md:gap-4 w-full sm:w-auto">
 //               <button 
 //                 onClick={() => router.push('/add-application')}
-//                 className="group relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-6 py-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25"
+//                 className="group relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-4 py-2 md:px-6 md:py-3 rounded-2xl transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25 text-sm md:text-base flex-1 sm:flex-none"
 //               >
 //                 <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-//                 <div className="relative flex items-center gap-2">
-//                   <FiPlus className="h-5 w-5" />
-//                   New Application
+//                 <div className="relative flex items-center gap-1 md:gap-2 justify-center">
+//                   <FiPlus className="h-4 w-4 md:h-5 md:w-5" />
+//                   <span className="hidden sm:inline">New Application</span>
+//                   <span className="sm:hidden">New</span>
 //                 </div>
 //               </button>
-//                          </div>
+//               <button 
+//                 className="sm:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all duration-200"
+//                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+//               >
+//                 {isMobileMenuOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
+//               </button>
+//             </div>
 //           </div>
 
 //           {/* Stats Cards */}
-//           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+//           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
 //             <StatCard
 //               icon={FiBriefcase}
-//               title="Total Applications"
+//               title="Total Apps"
 //               value={stats?.total_applications || 0}
 //               gradient="from-indigo-500/20 to-blue-500/30"
 //               hoverColor="indigo"
@@ -151,14 +161,14 @@
 //             />
 //             <StatCard
 //               icon={FiTrendingUp}
-//               title="Interview Rate"
+//               title="Interviews"
 //               value={`${stats?.interview_rate || 0}%`}
 //               gradient="from-purple-500/20 to-pink-500/30"
 //               hoverColor="purple"
 //             />
 //             <StatCard
 //               icon={FiAward}
-//               title="Offer Rate"
+//               title="Offers"
 //               value={`${stats?.offer_rate || 0}%`}
 //               gradient="from-green-500/20 to-emerald-500/30"
 //               hoverColor="green"
@@ -166,43 +176,43 @@
 //           </div>
 
 //           {/* Recent Applications */}
-//           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl border border-white/10 shadow-2xl">
+//           <div className="relative overflow-hidden rounded-2xl md:rounded-3xl bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl border border-white/10 shadow-2xl">
 //             <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-gradient-to-br from-purple-500/10 to-blue-500/10 blur-3xl"></div>
             
-//             <div className="relative p-8">
-//               <div className="flex justify-between items-center mb-8">
+//             <div className="relative p-4 md:p-6 lg:p-8">
+//               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8">
 //                 <div>
-//                   <h2 className="text-2xl font-bold text-white mb-2">Recent Applications</h2>
-//                   <p className="text-white/60">Your most recent job applications</p>
+//                   <h2 className="text-xl md:text-2xl font-bold text-white mb-1 md:mb-2">Recent Applications</h2>
+//                   <p className="text-white/60 text-sm md:text-base">Your most recent job applications</p>
 //                 </div>
 //                 <button 
 //                   onClick={() => router.push('/applications')}
-//                   className="group flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all duration-200"
+//                   className="group flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all duration-200 text-sm md:text-base self-end sm:self-auto"
 //                 >
 //                   View all 
-//                   <FiChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+//                   <FiChevronRight className="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform" />
 //                 </button>
 //               </div>
 
 //               {recentApplications.length === 0 ? (
-//                 <div className="text-center py-16">
-//                   <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center">
-//                     <FiBriefcase className="w-8 h-8 text-white/40" />
+//                 <div className="text-center py-10 md:py-16">
+//                   <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center">
+//                     <FiBriefcase className="w-6 h-6 md:w-8 md:h-8 text-white/40" />
 //                   </div>
-//                   <p className="text-white/60 mb-6 text-lg">No applications found</p>
+//                   <p className="text-white/60 mb-4 md:mb-6 text-base md:text-lg">No applications found</p>
 //                   <button 
 //                     onClick={() => router.push('/application/new')}
-//                     className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-2xl font-medium transition-all duration-300 hover:scale-105"
+//                     className="px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-2xl font-medium transition-all duration-300 hover:scale-105 text-sm md:text-base"
 //                   >
 //                     Add your first application
 //                   </button>
 //                 </div>
 //               ) : (
-//                 <div className="grid gap-4">
+//                 <div className="grid gap-3 md:gap-4">
 //                   {recentApplications.map((application, index) => (
 //                     <div
 //                       key={application.id}
-//                       className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-white/5 to-white/2 backdrop-blur-sm border border-white/10 hover:border-white/20 p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10"
+//                       className="group relative overflow-hidden rounded-xl md:rounded-2xl bg-gradient-to-r from-white/5 to-white/2 backdrop-blur-sm border border-white/10 hover:border-white/20 p-4 md:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10"
 //                       onClick={() => router.push(`/application/${application.id}`)}
 //                       style={{ animationDelay: `${index * 100}ms` }}
 //                     >
@@ -210,52 +220,52 @@
 //                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/0 via-purple-500/5 to-pink-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       
 //                       {/* Floating orb effect */}
-//                       <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-gradient-to-r from-indigo-400 to-purple-400 opacity-60 group-hover:opacity-100 transition-opacity"></div>
+//                       <div className="absolute top-2 md:top-4 right-2 md:right-4 w-2 h-2 rounded-full bg-gradient-to-r from-indigo-400 to-purple-400 opacity-60 group-hover:opacity-100 transition-opacity"></div>
                       
 //                       <div className="relative">
-//                         <div className="flex justify-between items-start mb-4">
+//                         <div className="flex flex-col md:flex-row justify-between items-start md:items-start gap-3 mb-3 md:mb-4">
 //                           <div className="flex-1">
-//                             <div className="flex items-center gap-3 mb-2">
-//                               <h3 className="text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-200 group-hover:to-purple-200 group-hover:bg-clip-text transition-all duration-300">
+//                             <div className="flex items-center gap-2 md:gap-3 mb-1 md:mb-2">
+//                               <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-200 group-hover:to-purple-200 group-hover:bg-clip-text transition-all duration-300 line-clamp-1">
 //                                 {application.job_title}
 //                               </h3>
 //                               {application.job_url && (
 //                                 <button 
-//                                   className="opacity-0 group-hover:opacity-100 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-200"
+//                                   className="opacity-0 group-hover:opacity-100 p-1 md:p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-200"
 //                                   onClick={(e) => {
 //                                     e.stopPropagation();
 //                                     window.open(application.job_url, '_blank');
 //                                   }}
 //                                 >
-//                                   <FiArrowUpRight className="h-4 w-4" />
+//                                   <FiArrowUpRight className="h-3 w-3 md:h-4 md:w-4" />
 //                                 </button>
 //                               )}
 //                             </div>
-//                             <p className="text-white/80 text-lg font-medium mb-3">{application.company_name}</p>
+//                             <p className="text-white/80 text-base md:text-lg font-medium mb-2 md:mb-3 line-clamp-1">{application.company_name}</p>
 //                           </div>
                           
-//                           <div className="flex items-center gap-3">
-//                             <span className={`px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm ${getStatusColor(application.status)}`}>
+//                           <div className="flex items-center gap-2 md:gap-3 self-end md:self-auto">
+//                             <span className={`px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium backdrop-blur-sm ${getStatusColor(application.status)}`}>
 //                               {application.status.charAt(0).toUpperCase() + application.status.slice(1)}
 //                             </span>
 //                           </div>
 //                         </div>
 
-//                         <div className="flex flex-wrap items-center gap-6 text-sm text-white/60">
+//                         <div className="flex flex-wrap items-center gap-3 md:gap-6 text-xs md:text-sm text-white/60">
 //                           {application.location && (
-//                             <div className="flex items-center gap-2">
-//                               <div className="p-1.5 rounded-lg bg-white/5">
-//                                 <FiMapPin className="w-4 h-4" />
+//                             <div className="flex items-center gap-1 md:gap-2">
+//                               <div className="p-1 md:p-1.5 rounded-lg bg-white/5">
+//                                 <FiMapPin className="w-3 h-3 md:w-4 md:h-4" />
 //                               </div>
-//                               <span className="font-medium">{application.location}</span>
+//                               <span className="font-medium line-clamp-1">{application.location}</span>
 //                             </div>
 //                           )}
-//                           <div className="flex items-center gap-2">
-//                             <div className="p-1.5 rounded-lg bg-white/5">
-//                               <FiClock className="w-4 h-4" />
+//                           <div className="flex items-center gap-1 md:gap-2">
+//                             <div className="p-1 md:p-1.5 rounded-lg bg-white/5">
+//                               <FiClock className="w-3 h-3 md:w-4 md:h-4" />
 //                             </div>
 //                             <span className="font-medium">
-//                               Applied {new Date(application.application_date).toLocaleDateString()}
+//                               {new Date(application.application_date).toLocaleDateString()}
 //                             </span>
 //                           </div>
 //                         </div>
@@ -276,6 +286,7 @@
 // };
 
 // export default Dashboard;
+
 
 
 import React, { useEffect, useState } from 'react';
@@ -481,7 +492,7 @@ const Dashboard: React.FC = () => {
                   </div>
                   <p className="text-white/60 mb-4 md:mb-6 text-base md:text-lg">No applications found</p>
                   <button 
-                    onClick={() => router.push('/application/new')}
+                    onClick={() => router.push('/add-application')}
                     className="px-4 py-2 md:px-6 md:py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-2xl font-medium transition-all duration-300 hover:scale-105 text-sm md:text-base"
                   >
                     Add your first application
@@ -509,12 +520,12 @@ const Dashboard: React.FC = () => {
                               <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-indigo-200 group-hover:to-purple-200 group-hover:bg-clip-text transition-all duration-300 line-clamp-1">
                                 {application.job_title}
                               </h3>
-                              {application.job_url && (
+                              {application.job_posting_url && (
                                 <button 
                                   className="opacity-0 group-hover:opacity-100 p-1 md:p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-200"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    window.open(application.job_url, '_blank');
+                                    window.open(application.job_posting_url, '_blank');
                                   }}
                                 >
                                   <FiArrowUpRight className="h-3 w-3 md:h-4 md:w-4" />
@@ -545,7 +556,7 @@ const Dashboard: React.FC = () => {
                               <FiClock className="w-3 h-3 md:w-4 md:h-4" />
                             </div>
                             <span className="font-medium">
-                              {new Date(application.application_date).toLocaleDateString()}
+                              Applied {new Date(application.application_date).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
