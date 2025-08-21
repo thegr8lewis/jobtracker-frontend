@@ -161,7 +161,7 @@ import axios from 'axios';
 // Base URL
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
-  'http://localhost:8000/api';
+  'https://job-tracker-backend-ztii.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
