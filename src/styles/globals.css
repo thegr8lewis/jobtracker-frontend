@@ -50,7 +50,7 @@ button:hover {
   transform: translateY(-1px);
 }
 
-/* For MUI dropdowns */
+
 .MuiMenu-paper {
   background-color: rgb(31 41 55) !important;
   color: white !important;
@@ -64,7 +64,7 @@ button:hover {
   background-color: rgb(76 29 149) !important;
 }
 
-/* For native select dropdowns */
+
 select option {
   background-color: rgb(31 41 55);
   color: white;

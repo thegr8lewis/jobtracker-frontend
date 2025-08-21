@@ -1,710 +1,1074 @@
+// "use client"
 
-// import React, { useEffect, useState } from 'react';
-// import { useRouter } from 'next/router';
-// import Layout from '../components/Layout';
-// import { applicationAPI, Application } from '../lib/api';
-// import { 
-//   FiLoader, 
-//   FiPlus, 
-//   FiCalendar, 
-//   FiMapPin, 
-//   FiDollarSign, 
-//   FiExternalLink, 
+// import type React from "react"
+// import { useEffect, useState } from "react"
+// import { useRouter } from "next/router"
+// import Layout from "../components/Layout"
+// import { applicationAPI, type Application, type ApplicationStatus } from "../lib/api"
+// import {
+//   FiLoader,
+//   FiPlus,
+//   FiCalendar,
+//   FiMapPin,
+//   FiDollarSign,
+//   FiExternalLink,
 //   FiSearch,
 //   FiChevronRight,
 //   FiBriefcase,
-//   FiX
-// } from 'react-icons/fi';
+//   FiX,
+//   FiEdit3,
+//   FiTrash2,
+//   FiArrowLeft,
+// } from "react-icons/fi"
 
-// const statusColumns = [
-//   { 
-//     key: 'saved', 
-//     label: 'Saved', 
-//     description: 'Jobs you want to apply to',
-//     iconColor: 'text-amber-400',
-//     gradient: 'from-amber-500/20 to-yellow-500/20',
-//     hoverShadow: 'hover:shadow-amber-500/20'
+// const statusColumns: {
+//   key: ApplicationStatus
+//   label: string
+//   description: string
+//   iconColor: string
+//   bgColor: string
+//   borderColor: string
+//   glowColor: string
+// }[] = [
+//   {
+//     key: "saved",
+//     label: "Saved",
+//     description: "Jobs you want to apply to",
+//     iconColor: "text-amber-400",
+//     bgColor: "bg-gradient-to-br from-amber-500/10 to-yellow-500/5",
+//     borderColor: "border-amber-500/20",
+//     glowColor: "shadow-amber-500/10",
 //   },
-//   { 
-//     key: 'applied', 
-//     label: 'Applied', 
-//     description: 'Applications submitted',
-//     iconColor: 'text-blue-400',
-//     gradient: 'from-blue-500/20 to-cyan-500/20',
-//     hoverShadow: 'hover:shadow-blue-500/20'
+//   {
+//     key: "applied",
+//     label: "Applied",
+//     description: "Applications submitted",
+//     iconColor: "text-blue-400",
+//     bgColor: "bg-gradient-to-br from-blue-500/10 to-cyan-500/5",
+//     borderColor: "border-blue-500/20",
+//     glowColor: "shadow-blue-500/10",
 //   },
-//   { 
-//     key: 'interview', 
-//     label: 'Interview', 
-//     description: 'In progress interviews',
-//     iconColor: 'text-purple-400',
-//     gradient: 'from-purple-500/20 to-fuchsia-500/20',
-//     hoverShadow: 'hover:shadow-purple-500/20'
+//   {
+//     key: "interview",
+//     label: "Interview",
+//     description: "In progress interviews",
+//     iconColor: "text-purple-400",
+//     bgColor: "bg-gradient-to-br from-purple-500/10 to-fuchsia-500/5",
+//     borderColor: "border-purple-500/20",
+//     glowColor: "shadow-purple-500/10",
 //   },
-//   { 
-//     key: 'offer', 
-//     label: 'Offer', 
-//     description: 'Received offers',
-//     iconColor: 'text-emerald-400',
-//     gradient: 'from-emerald-500/20 to-teal-500/20',
-//     hoverShadow: 'hover:shadow-emerald-500/20'
+//   {
+//     key: "offer",
+//     label: "Offer",
+//     description: "Received offers",
+//     iconColor: "text-emerald-400",
+//     bgColor: "bg-gradient-to-br from-emerald-500/10 to-teal-500/5",
+//     borderColor: "border-emerald-500/20",
+//     glowColor: "shadow-emerald-500/10",
 //   },
-//   { 
-//     key: 'rejected', 
-//     label: 'Rejected', 
-//     description: 'Unsuccessful applications',
-//     iconColor: 'text-rose-400',
-//     gradient: 'from-rose-500/20 to-red-500/20',
-//     hoverShadow: 'hover:shadow-rose-500/20'
+//   {
+//     key: "rejected",
+//     label: "Rejected",
+//     description: "Unsuccessful applications",
+//     iconColor: "text-rose-400",
+//     bgColor: "bg-gradient-to-br from-rose-500/10 to-red-500/5",
+//     borderColor: "border-rose-500/20",
+//     glowColor: "shadow-rose-500/10",
 //   },
-//   { 
-//     key: 'withdrawn', 
-//     label: 'Withdrawn', 
-//     description: 'Applications withdrawn',
-//     iconColor: 'text-gray-400',
-//     gradient: 'from-gray-500/20 to-slate-500/20',
-//     hoverShadow: 'hover:shadow-gray-500/20'
+//   {
+//     key: "withdrawn",
+//     label: "Withdrawn",
+//     description: "Applications withdrawn",
+//     iconColor: "text-slate-400",
+//     bgColor: "bg-gradient-to-br from-slate-500/10 to-gray-500/5",
+//     borderColor: "border-slate-500/20",
+//     glowColor: "shadow-slate-500/10",
 //   },
-// ];
+// ]
 
 // const PipelinePage: React.FC = () => {
-//   const [applications, setApplications] = useState<Application[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-//   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-//   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
-//   const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
-//   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-//   const [searchQuery, setSearchQuery] = useState('');
-//   const router = useRouter();
+//   const [applications, setApplications] = useState<Application[]>([])
+//   const [loading, setLoading] = useState(true)
+//   const [error, setError] = useState<string | null>(null)
+//   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+//   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null)
+//   const [updatingStatus, setUpdatingStatus] = useState<number | null>(null)
+//   const [selectedStatus, setSelectedStatus] = useState<ApplicationStatus | null>(null)
+//   const [searchQuery, setSearchQuery] = useState("")
+//   const router = useRouter()
 
 //   useEffect(() => {
-//     fetchApplications();
-//   }, []);
+//     fetchApplications()
+//   }, [])
 
 //   const fetchApplications = async () => {
 //     try {
-//       setLoading(true);
-//       setError(null);
-//       const response = await applicationAPI.getAll();
-//       setApplications(response.data || response);
+//       setLoading(true)
+//       setError(null)
+//       const response = await applicationAPI.getAll()
+//       setApplications(response.data || response)
 //     } catch (err: any) {
-//       console.error('Error fetching applications:', err);
-//       setError(err.response?.data?.message || err.message || 'Failed to fetch applications');
+//       console.error("Error fetching applications:", err)
+//       setError(err.response?.data?.message || err.message || "Failed to fetch applications")
 //     } finally {
-//       setLoading(false);
+//       setLoading(false)
 //     }
-//   };
+//   }
 
-//   const handleStatusChange = async (applicationId: number, newStatus: string) => {
+//   const handleStatusChange = async (applicationId: number, newStatus: ApplicationStatus) => {
 //     try {
-//       setUpdatingStatus(applicationId);
-//       setError(null);
-      
-//       let updateResponse;
+//       setUpdatingStatus(applicationId)
+//       setError(null)
+
+//       let updateResponse
 //       try {
-//         updateResponse = await applicationAPI.updateStatus(applicationId, newStatus);
+//         updateResponse = await applicationAPI.updateStatus(applicationId, newStatus)
 //       } catch (firstError) {
 //         try {
-//           updateResponse = await applicationAPI.update(applicationId, { status: newStatus });
+//           updateResponse = await applicationAPI.update(applicationId, { status: newStatus })
 //         } catch (secondError) {
 //           updateResponse = await fetch(`/api/applications/${applicationId}`, {
-//             method: 'PATCH',
-//             headers: {
-//               'Content-Type': 'application/json',
-//             },
+//             method: "PATCH",
+//             headers: { "Content-Type": "application/json" },
 //             body: JSON.stringify({ status: newStatus }),
-//           });
-          
-//           if (!updateResponse.ok) {
-//             throw new Error(`HTTP error! status: ${updateResponse.status}`);
-//           }
+//           })
+//           if (!updateResponse.ok) throw new Error(`HTTP error! status: ${updateResponse.status}`)
 //         }
 //       }
-      
-//       await fetchApplications();
+//       await fetchApplications()
 //     } catch (err: any) {
-//       console.error('Error updating status:', err);
-//       setError(err.response?.data?.message || err.message || 'Failed to update status');
+//       console.error("Error updating status:", err)
+//       setError(err.response?.data?.message || err.message || "Failed to update status")
 //     } finally {
-//       setUpdatingStatus(null);
+//       setUpdatingStatus(null)
 //     }
-//   };
+//   }
 
 //   const handleDeleteApplication = async () => {
-//     if (!selectedApplication) return;
+//     if (!selectedApplication) return
 //     try {
-//       setError(null);
-//       await applicationAPI.delete(selectedApplication.id);
-//       await fetchApplications();
-//       setDeleteDialogOpen(false);
+//       setError(null)
+//       await applicationAPI.delete(selectedApplication.id)
+//       await fetchApplications()
+//       setDeleteDialogOpen(false)
 //     } catch (err: any) {
-//       console.error('Error deleting application:', err);
-//       setError(err.response?.data?.message || err.message || 'Failed to delete application');
+//       console.error("Error deleting application:", err)
+//       setError(err.response?.data?.message || err.message || "Failed to delete application")
 //     }
-//   };
+//   }
 
-//   const handleAddApplication = () => {
-//     router.push('/add-application');
-//   };
+//   const handleAddApplication = () => router.push("/add-application")
+//   const handleJobClick = (applicationId: number) => router.push(`/applications/${applicationId}`)
+//   const handleEditApplication = (applicationId: number) => router.push(`/applications/${applicationId}/edit`)
 
-//   const handleJobClick = (applicationId: number) => {
-//     const possibleRoutes = [
-//       `/application/${applicationId}`,
-//       `/applications/${applicationId}`,
-//       `/job/${applicationId}`,
-//       `/jobs/${applicationId}`
-//     ];
-//     router.push(possibleRoutes[0]);
-//   };
-
-//   const handleEditApplication = (applicationId: number) => {
-//     const possibleEditRoutes = [
-//       `/application/${applicationId}/edit`,
-//       `/applications/${applicationId}/edit`,
-//       `/edit-application/${applicationId}`,
-//       `/application/edit/${applicationId}`
-//     ];
-//     router.push(possibleEditRoutes[0]);
-//   };
-
-//   const getApplicationsByStatus = (status: string) => {
-//     return applications
+//   const getApplicationsByStatus = (status: ApplicationStatus) =>
+//     applications
 //       .filter((app) => app.status === status)
 //       .filter((app) =>
 //         searchQuery
 //           ? app.job_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
 //             app.company_name.toLowerCase().includes(searchQuery.toLowerCase())
-//           : true
-//       );
-//   };
+//           : true,
+//       )
 
-//   const getStatusColor = (status: string) => {
-//     switch (status) {
-//       case 'applied': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-//       case 'interview': return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
-//       case 'offer': return 'bg-green-500/20 text-green-300 border-green-500/30';
-//       case 'rejected': return 'bg-red-500/20 text-red-300 border-red-500/30';
-//       case 'withdrawn': return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
-//       default: return 'bg-gray-400/20 text-gray-300 border-gray-400/30';
-//     }
-//   };
+//   const getStatusColor = (status: ApplicationStatus) => {
+//     const statusInfo = statusColumns.find((s) => s.key === status)
+//     return statusInfo ? `${statusInfo.bgColor} ${statusInfo.borderColor}` : "bg-slate-500/10 border-slate-500/20"
+//   }
 
-//   const ApplicationTable: React.FC<{ applications: Application[], status: string }> = ({ applications, status }) => {
-//     const statusInfo = statusColumns.find(s => s.key === status);
-    
+//   const ApplicationCard: React.FC<{ application: Application; index: number }> = ({ application, index }) => {
+//     const statusInfo = statusColumns.find((s) => s.key === application.status)
+
 //     return (
-//       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl border border-white/10 shadow-2xl">
-//         <div className={`absolute -top-20 -right-20 w-40 h-40 rounded-full bg-gradient-to-br ${statusInfo?.gradient} blur-3xl opacity-30`}></div>
-        
-//         <div className="relative p-6">
-//           <div className="flex items-center justify-between mb-6">
-//             <div className="flex items-center gap-4">
-//               <button
-//                 onClick={() => setSelectedStatus(null)}
-//                 className="flex items-center gap-2 text-white/60 hover:text-white transition-colors"
-//               >
-//                 <FiChevronRight className="rotate-180 w-5 h-5" />
-//                 Back to Statuses
-//               </button>
-//               <h3 className="text-2xl font-bold text-white">
-//                 {statusInfo?.label} Applications
-//               </h3>
+//       <div
+//         className={`group relative overflow-hidden rounded-2xl ${statusInfo?.bgColor} backdrop-blur-sm border ${statusInfo?.borderColor} hover:${statusInfo?.glowColor} hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer`}
+//         onClick={() => handleJobClick(application.id)}
+//       >
+//         {/* Animated background gradient */}
+//         <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+//         {/* Floating orb effect */}
+//         <div
+//           className={`absolute -top-8 -right-8 w-16 h-16 rounded-full ${statusInfo?.bgColor} blur-xl opacity-30 group-hover:opacity-60 transition-all duration-500 group-hover:scale-150`}
+//         ></div>
+
+//         <div className="relative p-6 space-y-4">
+//           {/* Header with status badge */}
+//           <div className="flex items-start justify-between">
+//             <div className="flex items-center gap-3">
+//               <div className={`p-2.5 rounded-xl ${statusInfo?.bgColor} border ${statusInfo?.borderColor} shadow-lg`}>
+//                 <FiBriefcase className={`w-5 h-5 ${statusInfo?.iconColor}`} />
+//               </div>
+//               <div>
+//                 <h3 className="font-bold text-white text-lg leading-tight group-hover:text-white/90 transition-colors">
+//                   {application.job_title}
+//                 </h3>
+//                 <p className="text-white/60 text-sm font-medium">{application.company_name}</p>
+//               </div>
 //             </div>
-//             <span className={`px-4 py-1.5 rounded-full text-sm font-semibold ${statusInfo?.iconColor} bg-white/5 border border-white/10`}>
-//               {applications.length} {applications.length === 1 ? 'application' : 'applications'}
+//             <span
+//               className={`px-3 py-1.5 rounded-full text-xs font-bold ${statusInfo?.iconColor} bg-white/10 border border-white/20 backdrop-blur-sm`}
+//             >
+//               #{index + 1}
 //             </span>
 //           </div>
 
-//           <div className="overflow-x-auto">
-//             <table className="w-full text-sm text-left text-gray-300">
-//               <thead className="text-xs uppercase bg-white/5 border-b border-white/10">
-//                 <tr>
-//                   <th scope="col" className="px-6 py-4 font-medium text-white/80">#</th>
-//                   <th scope="col" className="px-6 py-4 font-medium text-white/80">Job Title</th>
-//                   <th scope="col" className="px-6 py-4 font-medium text-white/80">Company</th>
-//                   <th scope="col" className="px-6 py-4 font-medium text-white/80">Date</th>
-//                   <th scope="col" className="px-6 py-4 font-medium text-white/80">Location</th>
-//                   <th scope="col" className="px-6 py-4 font-medium text-white/80">Salary</th>
-//                   <th scope="col" className="px-6 py-4 font-medium text-white/80">Actions</th>
-//                 </tr>
-//               </thead>
-//               <tbody>
-//                 {applications.map((application, index) => (
-//                   <tr 
-//                     key={application.id} 
-//                     className="group border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
-//                     onClick={() => handleJobClick(application.id)}
-//                   >
-//                     <td className="px-6 py-4 font-medium text-white/70">{index + 1}</td>
-//                     <td className="px-6 py-4">
-//                       <div className="flex items-center gap-3">
-//                         <div className="p-2 rounded-lg bg-white/5">
-//                           <FiBriefcase className="w-4 h-4 text-white/70" />
-//                         </div>
-//                         <span className="font-medium text-white">{application.job_title}</span>
-//                       </div>
-//                     </td>
-//                     <td className="px-6 py-4">{application.company_name}</td>
-//                     <td className="px-6 py-4">
-//                       <div className="flex items-center gap-2">
-//                         <FiCalendar className="w-4 h-4 text-white/50" />
-//                         {new Date(application.application_date).toLocaleDateString()}
-//                       </div>
-//                     </td>
-//                     <td className="px-6 py-4">
-//                       {application.location && (
-//                         <div className="flex items-center gap-2">
-//                           <FiMapPin className="w-4 h-4 text-white/50" />
-//                           {application.location}
-//                         </div>
-//                       )}
-//                     </td>
-//                     <td className="px-6 py-4">
-//                       {application.salary && (
-//                         <div className="flex items-center gap-2">
-//                           <FiDollarSign className="w-4 h-4 text-white/50" />
-//                           {application.salary}
-//                         </div>
-//                       )}
-//                     </td>
-//                     <td className="px-6 py-4">
-//                       <div className="flex gap-3 items-center" onClick={(e) => e.stopPropagation()}>
-//                         {application.job_url && (
-//                           <button
-//                             onClick={() => window.open(application.job_url, '_blank')}
-//                             className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors"
-//                             title="Open job posting"
-//                           >
-//                             <FiExternalLink className="w-4 h-4" />
-//                           </button>
-//                         )}
-                        
-//                         <button
-//                           onClick={() => handleEditApplication(application.id)}
-//                           className="px-3 py-1.5 text-xs rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors"
-//                         >
-//                           Edit
-//                         </button>
-                        
-//                         <button
-//                           onClick={() => {
-//                             setSelectedApplication(application);
-//                             setDeleteDialogOpen(true);
-//                           }}
-//                           className="px-3 py-1.5 text-xs rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-white transition-colors"
-//                         >
-//                           Delete
-//                         </button>
-                        
-//                         <select
-//                           value={application.status}
-//                           onChange={(e) => handleStatusChange(application.id, e.target.value)}
-//                           disabled={updatingStatus === application.id}
-//                           className={`bg-white/5 border ${getStatusColor(application.status)} rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary focus:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}
-//                         >
-//                           {statusColumns.map((status) => (
-//                             <option key={status.key} value={status.key} className="bg-gray-900 text-white">
-//                               {status.label}
-//                             </option>
-//                           ))}
-//                         </select>
-                        
-//                         {updatingStatus === application.id && (
-//                           <FiLoader className="w-4 h-4 text-primary animate-spin" />
-//                         )}
-//                       </div>
-//                     </td>
-//                   </tr>
-//                 ))}
-//               </tbody>
-//             </table>
-//           </div>
-          
-//           {applications.length === 0 && (
-//             <div className="text-center py-16">
-//               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-white/5 to-white/10 flex items-center justify-center">
-//                 <FiBriefcase className="w-8 h-8 text-white/40" />
+//           {/* Details grid */}
+//           <div className="grid grid-cols-1 gap-3 text-sm">
+//             <div className="flex items-center gap-2 text-white/70">
+//               <FiCalendar className="w-4 h-4 text-white/50" />
+//               <span>
+//                 {new Date(application.application_date).toLocaleDateString("en-US", {
+//                   month: "short",
+//                   day: "numeric",
+//                   year: "numeric",
+//                 })}
+//               </span>
+//             </div>
+
+//             {application.location && (
+//               <div className="flex items-center gap-2 text-white/70">
+//                 <FiMapPin className="w-4 h-4 text-white/50" />
+//                 <span className="truncate">{application.location}</span>
 //               </div>
-//               <p className="text-white/60 mb-6 text-lg">No applications found in this category</p>
-//               <button 
-//                 onClick={handleAddApplication}
-//                 className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-2xl font-medium transition-all duration-300 hover:scale-105"
+//             )}
+
+//             {application.salary_range && (
+//               <div className="flex items-center gap-2 text-white/70">
+//                 <FiDollarSign className="w-4 h-4 text-white/50" />
+//                 <span className="font-medium">{application.salary_range}</span>
+//               </div>
+//             )}
+//           </div>
+
+//           {/* Action buttons */}
+//           <div className="flex items-center justify-between pt-2 border-t border-white/10">
+//             <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+//               {application.job_posting_url && (
+//                 <button
+//                   onClick={() => window.open(application.job_posting_url, "_blank")}
+//                   className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-200 hover:scale-110"
+//                   title="Open job posting"
+//                 >
+//                   <FiExternalLink className="w-4 h-4" />
+//                 </button>
+//               )}
+//               <button
+//                 onClick={() => handleEditApplication(application.id)}
+//                 className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-200 hover:scale-110"
+//                 title="Edit application"
 //               >
-//                 Add New Application
+//                 <FiEdit3 className="w-4 h-4" />
+//               </button>
+//               <button
+//                 onClick={() => {
+//                   setSelectedApplication(application)
+//                   setDeleteDialogOpen(true)
+//                 }}
+//                 className="p-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all duration-200 hover:scale-110"
+//                 title="Delete application"
+//               >
+//                 <FiTrash2 className="w-4 h-4" />
 //               </button>
 //             </div>
-//           )}
+
+//             <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+//               {updatingStatus === application.id && <FiLoader className="w-4 h-4 text-white/60 animate-spin" />}
+//               <select
+//                 value={application.status}
+//                 onChange={(e) => handleStatusChange(application.id, e.target.value as ApplicationStatus)}
+//                 disabled={updatingStatus === application.id}
+//                 className={`bg-white/5 border ${getStatusColor(application.status)} rounded-lg px-3 py-1.5 text-xs font-medium text-white focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm`}
+//               >
+//                 {statusColumns.map((status) => (
+//                   <option key={status.key} value={status.key} className="bg-gray-900 text-white">
+//                     {status.label}
+//                   </option>
+//                 ))}
+//               </select>
+//             </div>
+//           </div>
 //         </div>
 //       </div>
-//     );
-//   };
+//     )
+//   }
+
+//   const StatusDetailView: React.FC<{ applications: Application[]; status: ApplicationStatus }> = ({
+//     applications,
+//     status,
+//   }) => {
+//     const statusInfo = statusColumns.find((s) => s.key === status)
+
+//     return (
+//       <div className="space-y-8">
+//         {/* Header */}
+//         <div className="flex items-center justify-between">
+//           <div className="flex items-center gap-4">
+//             <button
+//               onClick={() => setSelectedStatus(null)}
+//               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all duration-200 border border-white/10 hover:border-white/20"
+//             >
+//               <FiArrowLeft className="w-4 h-4" />
+//               <span className="font-medium">Back to Overview</span>
+//             </button>
+//             <div className="flex items-center gap-3">
+//               <div className={`p-3 rounded-xl ${statusInfo?.bgColor} border ${statusInfo?.borderColor} shadow-lg`}>
+//                 <FiBriefcase className={`w-6 h-6 ${statusInfo?.iconColor}`} />
+//               </div>
+//               <div>
+//                 <h1 className="text-3xl font-bold text-white">{statusInfo?.label}</h1>
+//                 <p className="text-white/60">{statusInfo?.description}</p>
+//               </div>
+//             </div>
+//           </div>
+
+//           <div className="flex items-center gap-4">
+//             <span
+//               className={`px-4 py-2 rounded-xl text-sm font-bold ${statusInfo?.iconColor} ${statusInfo?.bgColor} border ${statusInfo?.borderColor} backdrop-blur-sm`}
+//             >
+//               {applications.length} {applications.length === 1 ? "application" : "applications"}
+//             </span>
+//           </div>
+//         </div>
+
+//         {/* Applications grid */}
+//         {applications.length > 0 ? (
+//           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+//             {applications.map((application, index) => (
+//               <ApplicationCard key={application.id} application={application} index={index} />
+//             ))}
+//           </div>
+//         ) : (
+//           <div className="text-center py-16">
+//             <div
+//               className={`inline-flex p-4 rounded-2xl ${statusInfo?.bgColor} border ${statusInfo?.borderColor} mb-4`}
+//             >
+//               <FiBriefcase className={`w-8 h-8 ${statusInfo?.iconColor}`} />
+//             </div>
+//             <h3 className="text-xl font-semibold text-white mb-2">No applications yet</h3>
+//             <p className="text-white/60 mb-6">Start by adding your first application to this status.</p>
+//             <button
+//               onClick={handleAddApplication}
+//               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-all duration-200 border border-white/20 hover:border-white/30"
+//             >
+//               <FiPlus className="w-4 h-4" />
+//               Add Application
+//             </button>
+//           </div>
+//         )}
+//       </div>
+//     )
+//   }
 
 //   if (loading) {
 //     return (
 //       <Layout>
-//         <div className="flex justify-center items-center min-h-[400px]">
-//           <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
+//         <div className="flex justify-center items-center min-h-[60vh]">
+//           <div className="relative">
+//             <div className="w-20 h-20 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+//             <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-blue-500 rounded-full animate-spin animate-reverse"></div>
+//           </div>
 //         </div>
 //       </Layout>
-//     );
+//     )
 //   }
 
 //   return (
 //     <Layout>
-//       <div className="flex-1 px-4 py-6 max-w-7xl mx-auto space-y-6">
-//         {error && (
-//           <div className="bg-red-500/20 border border-red-500/50 text-white p-4 rounded-xl mb-6 flex items-center justify-between">
-//             <span>{error}</span>
-//             <button 
-//               onClick={() => setError(null)}
-//               className="text-red-300 hover:text-white ml-4"
-//             >
-//               <FiX className="w-5 h-5" />
-//             </button>
-//           </div>
-//         )}
-
-//         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-//           <div>
-//             <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-2">
-//               Application Pipeline
-//             </h2>
-//             <p className="text-white/60">Track your job applications through each stage</p>
-//           </div>
-//           <div className="flex gap-4 w-full sm:w-auto">
-//             <div className="relative flex-1 sm:flex-none">
-//               <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-//               <input
-//                 type="text"
-//                 placeholder="Search by job title or company..."
-//                 value={searchQuery}
-//                 onChange={(e) => setSearchQuery(e.target.value)}
-//                 className="pl-10 pr-4 py-2 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-primary w-full sm:w-64"
-//               />
-//             </div>
-//             <button 
-//               onClick={handleAddApplication}
-//               className="group relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-6 py-2 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/25"
-//             >
-//               <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-//               <div className="relative flex items-center gap-2">
-//                 <FiPlus className="h-4 w-4" />
-//                 Add Application
-//               </div>
-//             </button>
-//           </div>
-//         </div>
-
-//         {!selectedStatus ? (
-//           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-//             {statusColumns.map(({ key, label, description, iconColor, gradient, hoverShadow }) => {
-//               const columnApplications = getApplicationsByStatus(key);
-              
-//               return (
-//                 <div
-//                   key={key}
-//                   className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} backdrop-blur-md border border-white/10 p-6 cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${hoverShadow}`}
-//                   onClick={() => setSelectedStatus(key)}
+//       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+//         <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+//           {/* Error notification */}
+//           {error && (
+//             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-500/10 to-rose-500/10 border border-red-500/20 backdrop-blur-sm">
+//               <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent"></div>
+//               <div className="relative p-4 flex items-center justify-between">
+//                 <div className="flex items-center gap-3">
+//                   <div className="p-2 rounded-lg bg-red-500/20">
+//                     <FiX className="w-5 h-5 text-red-400" />
+//                   </div>
+//                   <span className="text-white font-medium">{error}</span>
+//                 </div>
+//                 <button
+//                   onClick={() => setError(null)}
+//                   className="p-2 rounded-lg hover:bg-white/10 text-red-400 hover:text-white transition-colors"
 //                 >
-//                   {/* Animated background element */}
-//                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
-//                   {/* Floating orb effect */}
-//                   <div className={`absolute -top-10 -right-10 w-20 h-20 rounded-full bg-gradient-to-br ${gradient} blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-300`}></div>
-                  
-//                   <div className="relative">
-//                     <div className="flex items-center justify-between mb-4">
-//                       <div className={`p-3 rounded-xl bg-gradient-to-br ${gradient} shadow-md`}>
-//                         <FiBriefcase className={`w-5 h-5 ${iconColor}`} />
+//                   <FiX className="w-5 h-5" />
+//                 </button>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Header and search */}
+//           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+//             <div>
+//               <h1 className="text-4xl font-bold text-white mb-2">Application Pipeline</h1>
+//               <p className="text-white/60 text-lg">Track and manage your job applications</p>
+//             </div>
+
+//             <div className="flex items-center gap-4">
+//               <div className="relative">
+//                 <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/50" />
+//                 <input
+//                   type="text"
+//                   placeholder="Search applications..."
+//                   value={searchQuery}
+//                   onChange={(e) => setSearchQuery(e.target.value)}
+//                   className="pl-10 pr-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all backdrop-blur-sm w-64"
+//                 />
+//               </div>
+
+//               <button
+//                 onClick={handleAddApplication}
+//                 className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-purple-500/25 hover:-translate-y-0.5"
+//               >
+//                 <FiPlus className="w-5 h-5" />
+//                 Add Application
+//               </button>
+//             </div>
+//           </div>
+
+//           {/* Main content */}
+//           {!selectedStatus ? (
+//             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+//               {statusColumns.map((statusInfo) => {
+//                 const columnApplications = getApplicationsByStatus(statusInfo.key)
+//                 return (
+//                   <div
+//                     key={statusInfo.key}
+//                     className={`group relative overflow-hidden rounded-2xl ${statusInfo.bgColor} backdrop-blur-sm border ${statusInfo.borderColor} hover:${statusInfo.glowColor} hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer`}
+//                     onClick={() => setSelectedStatus(statusInfo.key)}
+//                   >
+//                     {/* Animated background */}
+//                     <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+//                     {/* Floating orb */}
+//                     <div
+//                       className={`absolute -top-8 -right-8 w-16 h-16 rounded-full ${statusInfo.bgColor} blur-xl opacity-30 group-hover:opacity-60 transition-all duration-500 group-hover:scale-150`}
+//                     ></div>
+
+//                     <div className="relative p-6 space-y-4">
+//                       <div className="flex items-center justify-between">
+//                         <div
+//                           className={`p-3 rounded-xl ${statusInfo.bgColor} border ${statusInfo.borderColor} shadow-lg group-hover:scale-110 transition-transform duration-300`}
+//                         >
+//                           <FiBriefcase className={`w-6 h-6 ${statusInfo.iconColor}`} />
+//                         </div>
+//                         <span
+//                           className={`px-3 py-1.5 rounded-full text-sm font-bold ${statusInfo.iconColor} bg-white/10 border border-white/20 backdrop-blur-sm group-hover:scale-110 transition-transform duration-300`}
+//                         >
+//                           {columnApplications.length}
+//                         </span>
 //                       </div>
-//                       <span className={`px-3 py-1 rounded-full text-xs font-semibold ${iconColor} bg-white/5 border border-white/10`}>
-//                         {columnApplications.length}
-//                       </span>
+
+//                       <div>
+//                         <h3 className="text-xl font-bold text-white mb-2 group-hover:text-white/90 transition-colors">
+//                           {statusInfo.label}
+//                         </h3>
+//                         <p className="text-white/60 text-sm leading-relaxed">{statusInfo.description}</p>
+//                       </div>
+
+//                       <div className="flex items-center justify-between pt-2 border-t border-white/10">
+//                         <span className="text-xs text-white/50 font-medium">
+//                           {columnApplications.length} {columnApplications.length === 1 ? "item" : "items"}
+//                         </span>
+//                         <FiChevronRight
+//                           className={`w-4 h-4 ${statusInfo.iconColor} group-hover:translate-x-1 transition-transform duration-300`}
+//                         />
+//                       </div>
 //                     </div>
-                    
-//                     <h3 className="text-xl font-bold text-white mb-2">{label}</h3>
-//                     <p className="text-white/60 text-sm leading-relaxed">{description}</p>
-                    
-//                     {/* Hover indicator */}
-//                     <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-white/0 via-white/50 to-white/0 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+//                   </div>
+//                 )
+//               })}
+//             </div>
+//           ) : (
+//             <StatusDetailView applications={getApplicationsByStatus(selectedStatus)} status={selectedStatus} />
+//           )}
+
+//           {/* Delete confirmation modal */}
+//           {deleteDialogOpen && selectedApplication && (
+//             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+//               <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 p-6 max-w-md w-full shadow-2xl">
+//                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent"></div>
+//                 <div className="relative space-y-4">
+//                   <div className="flex items-center gap-3">
+//                     <div className="p-3 rounded-xl bg-red-500/20 border border-red-500/30">
+//                       <FiTrash2 className="w-6 h-6 text-red-400" />
+//                     </div>
+//                     <div>
+//                       <h3 className="text-xl font-bold text-white">Delete Application</h3>
+//                       <p className="text-white/60">This action cannot be undone</p>
+//                     </div>
+//                   </div>
+
+//                   <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+//                     <p className="text-white font-medium">{selectedApplication.job_title}</p>
+//                     <p className="text-white/60 text-sm">{selectedApplication.company_name}</p>
+//                   </div>
+
+//                   <div className="flex gap-3 pt-2">
+//                     <button
+//                       onClick={() => setDeleteDialogOpen(false)}
+//                       className="flex-1 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10 hover:border-white/20"
+//                     >
+//                       Cancel
+//                     </button>
+//                     <button
+//                       onClick={handleDeleteApplication}
+//                       className="flex-1 px-4 py-2 rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium transition-colors shadow-lg hover:shadow-red-500/25"
+//                     >
+//                       Delete
+//                     </button>
 //                   </div>
 //                 </div>
-//               );
-//             })}
-//           </div>
-//         ) : (
-//           <ApplicationTable applications={getApplicationsByStatus(selectedStatus)} status={selectedStatus} />
-//         )}
-
-//         {deleteDialogOpen && (
-//           <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-//             <div className="bg-gray-900/95 border border-gray-700/50 p-6 max-w-sm w-full rounded-xl shadow-2xl">
-//               <h2 className="text-xl font-bold text-white mb-4">Confirm Delete</h2>
-//               <p className="text-gray-300 mb-6">
-//                 Are you sure you want to delete the application for{' '}
-//                 <span className="font-semibold text-white">
-//                   {selectedApplication?.job_title} at {selectedApplication?.company_name}
-//                 </span>? This action cannot be undone.
-//               </p>
-//               <div className="flex justify-end gap-4">
-//                 <button
-//                   onClick={() => setDeleteDialogOpen(false)}
-//                   className="px-4 py-2 text-gray-300 hover:text-white transition-colors font-medium"
-//                 >
-//                   Cancel
-//                 </button>
-//                 <button
-//                   onClick={handleDeleteApplication}
-//                   className="px-4 py-2 bg-red-500/20 text-red-400 hover:bg-red-500/30 hover:text-red-300 rounded-lg transition-colors font-medium"
-//                 >
-//                   Delete
-//                 </button>
 //               </div>
 //             </div>
-//           </div>
-//         )}
+//           )}
+//         </div>
 //       </div>
 //     </Layout>
-//   );
-// };
+//   )
+// }
 
-// export default PipelinePage;
+// export default PipelinePage
 
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import Layout from '../components/Layout';
-import { applicationAPI, Application, ApplicationStatus } from '../lib/api';
-import { 
-  FiLoader, 
-  FiPlus, 
-  FiCalendar, 
-  FiMapPin, 
-  FiDollarSign, 
-  FiExternalLink, 
+
+"use client"
+
+import type React from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
+import Layout from "../components/Layout"
+import { applicationAPI, type Application, type ApplicationStatus } from "../lib/api"
+import {
+  FiLoader,
+  FiPlus,
+  FiCalendar,
+  FiMapPin,
+  FiDollarSign,
+  FiExternalLink,
   FiSearch,
   FiChevronRight,
   FiBriefcase,
-  FiX
-} from 'react-icons/fi';
+  FiX,
+  FiEdit3,
+  FiTrash2,
+  FiArrowLeft,
+} from "react-icons/fi"
 
-const statusColumns: { key: ApplicationStatus; label: string; description: string; iconColor: string; gradient: string; hoverShadow: string }[] = [
-  { key: 'saved', label: 'Saved', description: 'Jobs you want to apply to', iconColor: 'text-amber-400', gradient: 'from-amber-500/20 to-yellow-500/20', hoverShadow: 'hover:shadow-amber-500/20' },
-  { key: 'applied', label: 'Applied', description: 'Applications submitted', iconColor: 'text-blue-400', gradient: 'from-blue-500/20 to-cyan-500/20', hoverShadow: 'hover:shadow-blue-500/20' },
-  { key: 'interview', label: 'Interview', description: 'In progress interviews', iconColor: 'text-purple-400', gradient: 'from-purple-500/20 to-fuchsia-500/20', hoverShadow: 'hover:shadow-purple-500/20' },
-  { key: 'offer', label: 'Offer', description: 'Received offers', iconColor: 'text-emerald-400', gradient: 'from-emerald-500/20 to-teal-500/20', hoverShadow: 'hover:shadow-emerald-500/20' },
-  { key: 'rejected', label: 'Rejected', description: 'Unsuccessful applications', iconColor: 'text-rose-400', gradient: 'from-rose-500/20 to-red-500/20', hoverShadow: 'hover:shadow-rose-500/20' },
-  { key: 'withdrawn', label: 'Withdrawn', description: 'Applications withdrawn', iconColor: 'text-gray-400', gradient: 'from-gray-500/20 to-slate-500/20', hoverShadow: 'hover:shadow-gray-500/20' },
-];
+const statusColumns: {
+  key: ApplicationStatus
+  label: string
+  description: string
+  iconColor: string
+  bgColor: string
+  borderColor: string
+  glowColor: string
+}[] = [
+  {
+    key: "saved",
+    label: "Saved",
+    description: "Jobs you want to apply to",
+    iconColor: "text-amber-400",
+    bgColor: "bg-gradient-to-br from-amber-500/10 to-yellow-500/5",
+    borderColor: "border-amber-500/20",
+    glowColor: "shadow-amber-500/10",
+  },
+  {
+    key: "applied",
+    label: "Applied",
+    description: "Applications submitted",
+    iconColor: "text-blue-400",
+    bgColor: "bg-gradient-to-br from-blue-500/10 to-cyan-500/5",
+    borderColor: "border-blue-500/20",
+    glowColor: "shadow-blue-500/10",
+  },
+  {
+    key: "interview",
+    label: "Interview",
+    description: "In progress interviews",
+    iconColor: "text-purple-400",
+    bgColor: "bg-gradient-to-br from-purple-500/10 to-fuchsia-500/5",
+    borderColor: "border-purple-500/20",
+    glowColor: "shadow-purple-500/10",
+  },
+  {
+    key: "offer",
+    label: "Offer",
+    description: "Received offers",
+    iconColor: "text-emerald-400",
+    bgColor: "bg-gradient-to-br from-emerald-500/10 to-teal-500/5",
+    borderColor: "border-emerald-500/20",
+    glowColor: "shadow-emerald-500/10",
+  },
+  {
+    key: "rejected",
+    label: "Rejected",
+    description: "Unsuccessful applications",
+    iconColor: "text-rose-400",
+    bgColor: "bg-gradient-to-br from-rose-500/10 to-red-500/5",
+    borderColor: "border-rose-500/20",
+    glowColor: "shadow-rose-500/10",
+  },
+  {
+    key: "withdrawn",
+    label: "Withdrawn",
+    description: "Applications withdrawn",
+    iconColor: "text-slate-400",
+    bgColor: "bg-gradient-to-br from-slate-500/10 to-gray-500/5",
+    borderColor: "border-slate-500/20",
+    glowColor: "shadow-slate-500/10",
+  },
+]
 
 const PipelinePage: React.FC = () => {
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
-  const [updatingStatus, setUpdatingStatus] = useState<number | null>(null);
-  const [selectedStatus, setSelectedStatus] = useState<ApplicationStatus | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const router = useRouter();
+  const [applications, setApplications] = useState<Application[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null)
+  const [updatingStatus, setUpdatingStatus] = useState<number | null>(null)
+  const [selectedStatus, setSelectedStatus] = useState<ApplicationStatus | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
 
   useEffect(() => {
-    fetchApplications();
-  }, []);
+    fetchApplications()
+  }, [])
 
   const fetchApplications = async () => {
     try {
-      setLoading(true);
-      setError(null);
-      const response = await applicationAPI.getAll();
-      setApplications(response.data || response);
+      setLoading(true)
+      setError(null)
+      const response = await applicationAPI.getAll()
+      setApplications(response.data || response)
     } catch (err: any) {
-      console.error('Error fetching applications:', err);
-      setError(err.response?.data?.message || err.message || 'Failed to fetch applications');
+      console.error("Error fetching applications:", err)
+      setError(err.response?.data?.message || err.message || "Failed to fetch applications")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleStatusChange = async (applicationId: number, newStatus: ApplicationStatus) => {
     try {
-      setUpdatingStatus(applicationId);
-      setError(null);
-      
-      let updateResponse;
+      setUpdatingStatus(applicationId)
+      setError(null)
+
+      let updateResponse
       try {
-        updateResponse = await applicationAPI.updateStatus(applicationId, newStatus);
+        updateResponse = await applicationAPI.updateStatus(applicationId, newStatus)
       } catch (firstError) {
         try {
-          updateResponse = await applicationAPI.update(applicationId, { status: newStatus });
+          updateResponse = await applicationAPI.update(applicationId, { status: newStatus })
         } catch (secondError) {
           updateResponse = await fetch(`/api/applications/${applicationId}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ status: newStatus }),
-          });
-          if (!updateResponse.ok) throw new Error(`HTTP error! status: ${updateResponse.status}`);
+          })
+          if (!updateResponse.ok) throw new Error(`HTTP error! status: ${updateResponse.status}`)
         }
       }
-      await fetchApplications();
+      await fetchApplications()
     } catch (err: any) {
-      console.error('Error updating status:', err);
-      setError(err.response?.data?.message || err.message || 'Failed to update status');
+      console.error("Error updating status:", err)
+      setError(err.response?.data?.message || err.message || "Failed to update status")
     } finally {
-      setUpdatingStatus(null);
+      setUpdatingStatus(null)
     }
-  };
+  }
 
   const handleDeleteApplication = async () => {
-    if (!selectedApplication) return;
+    if (!selectedApplication) return
     try {
-      setError(null);
-      await applicationAPI.delete(selectedApplication.id);
-      await fetchApplications();
-      setDeleteDialogOpen(false);
+      setError(null)
+      await applicationAPI.delete(selectedApplication.id)
+      await fetchApplications()
+      setDeleteDialogOpen(false)
     } catch (err: any) {
-      console.error('Error deleting application:', err);
-      setError(err.response?.data?.message || err.message || 'Failed to delete application');
+      console.error("Error deleting application:", err)
+      setError(err.response?.data?.message || err.message || "Failed to delete application")
     }
-  };
+  }
 
-  const handleAddApplication = () => router.push('/add-application');
-  const handleJobClick = (applicationId: number) => router.push(`/applications/${applicationId}`);
-  const handleEditApplication = (applicationId: number) => router.push(`/applications/${applicationId}/edit`);
+  const handleAddApplication = () => router.push("/add-application")
+  const handleJobClick = (applicationId: number) => router.push(`/applications/${applicationId}`)
+  const handleEditApplication = (applicationId: number) => router.push(`/applications/${applicationId}/edit`)
 
-  const getApplicationsByStatus = (status: ApplicationStatus) => applications
-    .filter(app => app.status === status)
-    .filter(app => searchQuery ? app.job_title.toLowerCase().includes(searchQuery.toLowerCase()) || app.company_name.toLowerCase().includes(searchQuery.toLowerCase()) : true);
+  const getApplicationsByStatus = (status: ApplicationStatus) =>
+    applications
+      .filter((app) => app.status === status)
+      .filter((app) =>
+        searchQuery
+          ? app.job_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            app.company_name.toLowerCase().includes(searchQuery.toLowerCase())
+          : true,
+      )
 
   const getStatusColor = (status: ApplicationStatus) => {
-    switch (status) {
-      case 'applied': return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-      case 'interview': return 'bg-purple-500/20 text-purple-300 border-purple-500/30';
-      case 'offer': return 'bg-green-500/20 text-green-300 border-green-500/30';
-      case 'rejected': return 'bg-red-500/20 text-red-300 border-red-500/30';
-      case 'withdrawn': return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
-      default: return 'bg-gray-400/20 text-gray-300 border-gray-400/30';
-    }
-  };
+    const statusInfo = statusColumns.find((s) => s.key === status)
+    return statusInfo ? `${statusInfo.bgColor} ${statusInfo.borderColor}` : "bg-slate-500/10 border-slate-500/20"
+  }
 
-  const ApplicationTable: React.FC<{ applications: Application[]; status: ApplicationStatus }> = ({ applications, status }) => {
-    const statusInfo = statusColumns.find(s => s.key === status);
+  const ApplicationCard: React.FC<{ application: Application; index: number }> = ({ application, index }) => {
+    const statusInfo = statusColumns.find((s) => s.key === application.status)
+
     return (
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-xl border border-white/10 shadow-2xl">
-        <div className={`absolute -top-20 -right-20 w-40 h-40 rounded-full bg-gradient-to-br ${statusInfo?.gradient} blur-3xl opacity-30`}></div>
-        <div className="relative p-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <button onClick={() => setSelectedStatus(null)} className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
-                <FiChevronRight className="rotate-180 w-5 h-5" /> Back to Statuses
-              </button>
-              <h3 className="text-2xl font-bold text-white">{statusInfo?.label} Applications</h3>
+      <div
+        className={`group relative overflow-hidden rounded-xl sm:rounded-2xl ${statusInfo?.bgColor} backdrop-blur-sm border ${statusInfo?.borderColor} hover:${statusInfo?.glowColor} hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 cursor-pointer`}
+        onClick={() => handleJobClick(application.id)}
+      >
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+        <div
+          className={`absolute -top-4 -right-4 sm:-top-8 sm:-right-8 w-8 h-8 sm:w-16 sm:h-16 rounded-full ${statusInfo?.bgColor} blur-xl opacity-30 group-hover:opacity-60 transition-all duration-500 group-hover:scale-150`}
+        ></div>
+
+        <div className="relative p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4">
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+              <div
+                className={`p-1.5 sm:p-2.5 rounded-lg sm:rounded-xl ${statusInfo?.bgColor} border ${statusInfo?.borderColor} shadow-lg`}
+              >
+                <FiBriefcase className={`w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 ${statusInfo?.iconColor}`} />
+              </div>
+              <div>
+                <h3 className="font-bold text-white text-sm sm:text-base md:text-lg leading-tight group-hover:text-white/90 transition-colors truncate">
+                  {application.job_title}
+                </h3>
+                <p className="text-white/60 text-xs sm:text-sm font-medium truncate">{application.company_name}</p>
+              </div>
             </div>
-            <span className={`px-4 py-1.5 rounded-full text-sm font-semibold ${statusInfo?.iconColor} bg-white/5 border border-white/10`}>
-              {applications.length} {applications.length === 1 ? 'application' : 'applications'}
+            <span
+              className={`px-2 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-bold ${statusInfo?.iconColor} bg-white/10 border border-white/20 backdrop-blur-sm flex-shrink-0`}
+            >
+              #{index + 1}
             </span>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-300">
-              <thead className="text-xs uppercase bg-white/5 border-b border-white/10">
-                <tr>
-                  <th className="px-6 py-4 font-medium text-white/80">#</th>
-                  <th className="px-6 py-4 font-medium text-white/80">Job Title</th>
-                  <th className="px-6 py-4 font-medium text-white/80">Company</th>
-                  <th className="px-6 py-4 font-medium text-white/80">Date</th>
-                  <th className="px-6 py-4 font-medium text-white/80">Location</th>
-                  <th className="px-6 py-4 font-medium text-white/80">Salary</th>
-                  <th className="px-6 py-4 font-medium text-white/80">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {applications.map((application, index) => (
-                  <tr key={application.id} className="group border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors" onClick={() => handleJobClick(application.id)}>
-                    <td className="px-6 py-4 font-medium text-white/70">{index + 1}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-white/5">
-                          <FiBriefcase className="w-4 h-4 text-white/70" />
-                        </div>
-                        <span className="font-medium text-white">{application.job_title}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">{application.company_name}</td>
-                    <td className="px-6 py-4 flex items-center gap-2">
-                      <FiCalendar className="w-4 h-4 text-white/50" /> {new Date(application.application_date).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4">{application.location && <div className="flex items-center gap-2"><FiMapPin className="w-4 h-4 text-white/50" />{application.location}</div>}</td>
-                    <td className="px-6 py-4">{application.salary_range && <div className="flex items-center gap-2"><FiDollarSign className="w-4 h-4 text-white/50" />{application.salary_range}</div>}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-3 items-center" onClick={e => e.stopPropagation()}>
-                        {application.job_posting_url && (
-                          <button onClick={() => window.open(application.job_posting_url, '_blank')} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors" title="Open job posting">
-                            <FiExternalLink className="w-4 h-4" />
-                          </button>
-                        )}
-                        <button onClick={() => handleEditApplication(application.id)} className="px-3 py-1.5 text-xs rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-colors">Edit</button>
-                        <button onClick={() => { setSelectedApplication(application); setDeleteDialogOpen(true); }} className="px-3 py-1.5 text-xs rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-white transition-colors">Delete</button>
-                        <select value={application.status} onChange={(e) => handleStatusChange(application.id, e.target.value as ApplicationStatus)} disabled={updatingStatus === application.id} className={`bg-white/5 border ${getStatusColor(application.status)} rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-primary focus:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed`}>
-                          {statusColumns.map(status => (
-                            <option key={status.key} value={status.key} className="bg-gray-900 text-white">{status.label}</option>
-                          ))}
-                        </select>
-                        {updatingStatus === application.id && <FiLoader className="w-4 h-4 text-primary animate-spin" />}
-                      </div>
-                    </td>
-                  </tr>
+
+          <div className="grid grid-cols-1 gap-2 sm:gap-3 text-xs sm:text-sm">
+            <div className="flex items-center gap-2 text-white/70">
+              <FiCalendar className="w-3 h-3 sm:w-4 sm:h-4 text-white/50 flex-shrink-0" />
+              <span className="truncate">
+                {new Date(application.application_date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+
+            {application.location && (
+              <div className="flex items-center gap-2 text-white/70">
+                <FiMapPin className="w-3 h-3 sm:w-4 sm:h-4 text-white/50 flex-shrink-0" />
+                <span className="truncate">{application.location}</span>
+              </div>
+            )}
+
+            {application.salary_range && (
+              <div className="flex items-center gap-2 text-white/70">
+                <FiDollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-white/50 flex-shrink-0" />
+                <span className="font-medium truncate">{application.salary_range}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-white/10">
+            <div className="flex gap-1 sm:gap-2" onClick={(e) => e.stopPropagation()}>
+              {application.job_posting_url && (
+                <button
+                  onClick={() => window.open(application.job_posting_url, "_blank")}
+                  className="p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-200 hover:scale-110"
+                  title="Open job posting"
+                >
+                  <FiExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
+                </button>
+              )}
+              <button
+                onClick={() => handleEditApplication(application.id)}
+                className="p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all duration-200 hover:scale-110"
+                title="Edit application"
+              >
+                <FiEdit3 className="w-3 h-3 sm:w-4 sm:h-4" />
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedApplication(application)
+                  setDeleteDialogOpen(true)
+                }}
+                className="p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 transition-all duration-200 hover:scale-110"
+                title="Delete application"
+              >
+                <FiTrash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1 sm:gap-2" onClick={(e) => e.stopPropagation()}>
+              {updatingStatus === application.id && (
+                <FiLoader className="w-3 h-3 sm:w-4 sm:h-4 text-white/60 animate-spin" />
+              )}
+              <select
+                value={application.status}
+                onChange={(e) => handleStatusChange(application.id, e.target.value as ApplicationStatus)}
+                disabled={updatingStatus === application.id}
+                className={`bg-white/5 border ${getStatusColor(application.status)} rounded-md sm:rounded-lg px-2 py-1 sm:px-3 sm:py-1.5 text-xs font-medium text-white focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed backdrop-blur-sm`}
+              >
+                {statusColumns.map((status) => (
+                  <option key={status.key} value={status.key} className="bg-gray-900 text-white">
+                    {status.label}
+                  </option>
                 ))}
-              </tbody>
-            </table>
+              </select>
+            </div>
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
-  if (loading) return <Layout><div className="flex justify-center items-center min-h-[400px]"><div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div></div></Layout>;
+  const StatusDetailView: React.FC<{ applications: Application[]; status: ApplicationStatus }> = ({
+    applications,
+    status,
+  }) => {
+    const statusInfo = statusColumns.find((s) => s.key === status)
 
-  return (
-    <Layout>
-      <div className="flex-1 px-4 py-6 max-w-7xl mx-auto space-y-6">
-        {error && (
-          <div className="bg-red-500/20 border border-red-500/50 text-white p-4 rounded-xl mb-6 flex items-center justify-between">
-            <span>{error}</span>
-            <button onClick={() => setError(null)} className="text-red-300 hover:text-white ml-4">
-              <FiX className="w-5 h-5" />
+    return (
+      <div className="space-y-6 sm:space-y-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-0">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <button
+              onClick={() => setSelectedStatus(null)}
+              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all duration-200 border border-white/10 hover:border-white/20 self-start"
+            >
+              <FiArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="font-medium text-sm sm:text-base">Back to Overview</span>
+            </button>
+            <div className="flex items-center gap-3">
+              <div
+                className={`p-2 sm:p-3 rounded-lg sm:rounded-xl ${statusInfo?.bgColor} border ${statusInfo?.borderColor} shadow-lg`}
+              >
+                <FiBriefcase className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${statusInfo?.iconColor}`} />
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-1 sm:mb-2 group-hover:text-white/90 transition-colors">
+                  {statusInfo?.label}
+                </h1>
+                <p className="text-white/60 text-sm sm:text-base">{statusInfo?.description}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <span
+              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold ${statusInfo?.iconColor} ${statusInfo?.bgColor} border ${statusInfo?.borderColor} backdrop-blur-sm`}
+            >
+              {applications.length} {applications.length === 1 ? "application" : "applications"}
+            </span>
+          </div>
+        </div>
+
+        {applications.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
+            {applications.map((application, index) => (
+              <ApplicationCard key={application.id} application={application} index={index} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 sm:py-16">
+            <div
+              className={`inline-flex p-3 sm:p-4 rounded-xl sm:rounded-2xl ${statusInfo?.bgColor} border ${statusInfo?.borderColor} mb-4`}
+            >
+              <FiBriefcase className={`w-6 h-6 sm:w-8 sm:h-8 ${statusInfo?.iconColor}`} />
+            </div>
+            <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">No applications yet</h3>
+            <p className="text-white/60 mb-4 sm:mb-6 text-sm sm:text-base">
+              Start by adding your first application to this status.
+            </p>
+            <button
+              onClick={handleAddApplication}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-purple-500/25 hover:-translate-y-0.5 text-sm sm:text-base"
+            >
+              <FiPlus className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden xs:inline">Add Application</span>
+              <span className="xs:hidden">Add</span>
             </button>
           </div>
         )}
-        {/* Add your search and status grid here */}
-        {!selectedStatus ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
-            {statusColumns.map(({ key, label, description, iconColor, gradient, hoverShadow }) => {
-              const columnApplications = getApplicationsByStatus(key);
-              return (
-                <div key={key} className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} backdrop-blur-md border border-white/10 p-6 cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${hoverShadow}`} onClick={() => setSelectedStatus(key)}>
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <div className={`absolute -top-10 -right-10 w-20 h-20 rounded-full bg-gradient-to-br ${gradient} blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-300`}></div>
-                  <div className="relative">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className={`p-3 rounded-xl bg-gradient-to-br ${gradient} shadow-md`}>
-                        <FiBriefcase className={`w-5 h-5 ${iconColor}`} />
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center min-h-[60vh]">
+          <div className="relative">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-2 sm:border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-2 sm:border-4 border-transparent border-r-blue-500 rounded-full animate-spin animate-reverse"></div>
+          </div>
+        </div>
+      </Layout>
+    )
+  }
+
+  return (
+    <Layout>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 space-y-6 sm:space-y-8">
+          {error && (
+            <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-500/10 to-rose-500/10 border border-red-500/20 backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent"></div>
+              <div className="relative p-3 sm:p-4 flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                  <div className="p-1.5 sm:p-2 rounded-md sm:rounded-lg bg-red-500/20 flex-shrink-0">
+                    <FiX className="w-4 h-4 sm:w-5 sm:h-5 text-red-400" />
+                  </div>
+                  <span className="text-white font-medium text-sm sm:text-base truncate">{error}</span>
+                </div>
+                <button
+                  onClick={() => setError(null)}
+                  className="p-1.5 sm:p-2 rounded-md sm:rounded-lg hover:bg-white/10 text-red-400 hover:text-white transition-colors flex-shrink-0"
+                >
+                  <FiX className="w-4 h-4 sm:w-5 sm:h-5" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6">
+              <div>
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
+                  Application Pipeline
+                </h1>
+                <p className="text-white/60 text-sm sm:text-base md:text-lg">Track and manage your job applications</p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+                <div className="relative">
+                  <FiSearch className="absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-white/50" />
+                  <input
+                    type="text"
+                    placeholder="Search applications..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-8 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all backdrop-blur-sm w-full sm:w-48 md:w-64 text-sm sm:text-base"
+                  />
+                </div>
+
+                <button
+                  onClick={handleAddApplication}
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold transition-all duration-200 shadow-lg hover:shadow-purple-500/25 hover:-translate-y-0.5 text-sm sm:text-base"
+                >
+                  <FiPlus className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden xs:inline">Add Application</span>
+                  <span className="xs:hidden">Add</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {!selectedStatus ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
+              {statusColumns.map((statusInfo) => {
+                const columnApplications = getApplicationsByStatus(statusInfo.key)
+                return (
+                  <div
+                    key={statusInfo.key}
+                    className={`group relative overflow-hidden rounded-xl sm:rounded-2xl ${statusInfo.bgColor} backdrop-blur-sm border ${statusInfo.borderColor} hover:${statusInfo.glowColor} hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 sm:hover:-translate-y-2 cursor-pointer`}
+                    onClick={() => setSelectedStatus(statusInfo.key)}
+                  >
+                    {/* Animated background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+                    <div
+                      className={`absolute -top-4 -right-4 sm:-top-8 sm:-right-8 w-8 h-8 sm:w-16 sm:h-16 rounded-full ${statusInfo?.bgColor} blur-xl opacity-30 group-hover:opacity-60 transition-all duration-500 group-hover:scale-150`}
+                    ></div>
+
+                    <div className="relative p-4 sm:p-5 md:p-6 space-y-3 sm:space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div
+                          className={`p-2 sm:p-2.5 md:p-3 rounded-lg sm:rounded-xl ${statusInfo?.bgColor} border ${statusInfo?.borderColor} shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                        >
+                          <FiBriefcase className={`w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 ${statusInfo.iconColor}`} />
+                        </div>
+                        <span
+                          className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold ${statusInfo.iconColor} bg-white/10 border border-white/20 backdrop-blur-sm group-hover:scale-110 transition-transform duration-300`}
+                        >
+                          {columnApplications.length}
+                        </span>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${iconColor} bg-white/5 border border-white/10`}>{columnApplications.length}</span>
+
+                      <div>
+                        <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1 sm:mb-2 group-hover:text-white/90 transition-colors">
+                          {statusInfo.label}
+                        </h3>
+                        <p className="text-white/60 text-xs sm:text-sm leading-relaxed">{statusInfo.description}</p>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-white/10">
+                        <span className="text-xs text-white/50 font-medium">
+                          {columnApplications.length} {columnApplications.length === 1 ? "item" : "items"}
+                        </span>
+                        <FiChevronRight
+                          className={`w-3 h-3 sm:w-4 sm:h-4 ${statusInfo.iconColor} group-hover:translate-x-1 transition-transform duration-300`}
+                        />
+                      </div>
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">{label}</h3>
-                    <p className="text-white/60 text-sm leading-relaxed">{description}</p>
+                  </div>
+                )
+              })}
+            </div>
+          ) : (
+            <StatusDetailView applications={getApplicationsByStatus(selectedStatus)} status={selectedStatus} />
+          )}
+
+          {deleteDialogOpen && selectedApplication && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+              <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 p-4 sm:p-6 max-w-sm sm:max-w-md w-full shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent"></div>
+                <div className="relative space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-red-500/20 border border-red-500/30">
+                      <FiTrash2 className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-red-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-bold text-white">Delete Application</h3>
+                      <p className="text-white/60 text-sm sm:text-base">This action cannot be undone</p>
+                    </div>
+                  </div>
+
+                  <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white/5 border border-white/10">
+                    <p className="text-white font-medium text-sm sm:text-base truncate">
+                      {selectedApplication.job_title}
+                    </p>
+                    <p className="text-white/60 text-xs sm:text-sm truncate">{selectedApplication.company_name}</p>
+                  </div>
+
+                  <div className="flex gap-2 sm:gap-3 pt-2">
+                    <button
+                      onClick={() => setDeleteDialogOpen(false)}
+                      className="flex-1 px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10 hover:border-white/20 text-sm sm:text-base"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDeleteApplication}
+                      className="flex-1 px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium transition-colors shadow-lg hover:shadow-red-500/25 text-sm sm:text-base"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <ApplicationTable applications={getApplicationsByStatus(selectedStatus)} status={selectedStatus} />
-        )}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default PipelinePage;
+export default PipelinePage
