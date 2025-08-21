@@ -1,5 +1,3 @@
-
-
 // import axios from 'axios';
 
 // const API_BASE_URL =
@@ -68,6 +66,8 @@
 //   notes?: string;
 //   resume?: string;
 //   cover_letter?: string;
+//   resume_url?: string; // Added for frontend compatibility
+//   cover_letter_url?: string; // Added for frontend compatibility
 //   resume_content?: string;
 //   cover_letter_content?: string;
 //   timeline_events?: TimelineEvent[];
@@ -104,7 +104,6 @@
 //   interviews_count: number;
 //   offers_count: number;
 // }
-
 
 // // ------------------ API FUNCTIONS ------------------
 
@@ -156,8 +155,10 @@
 // export default api;
 
 
+
 import axios from 'axios';
 
+// Base URL
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   'https://job-tracker-backend-ztii.onrender.com/api';
@@ -170,14 +171,13 @@ const api = axios.create({
   },
 });
 
-// Request interceptor
+// ------------------ INTERCEPTORS ------------------
+
+// Request interceptor (add auth token if needed)
 api.interceptors.request.use(
   (config) => {
-    // Add auth token here if needed
     // const token = localStorage.getItem('token');
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
+    // if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
   (error) => Promise.reject(error)
@@ -202,6 +202,14 @@ api.interceptors.response.use(
 
 // ------------------ TYPES ------------------
 
+export type ApplicationStatus = 
+  | 'saved'
+  | 'applied'
+  | 'interview'
+  | 'offer'
+  | 'rejected'
+  | 'withdrawn';
+
 export interface TimelineEvent {
   id: number;
   event_type: string;
@@ -220,12 +228,12 @@ export interface Application {
   location?: string;
   salary_range?: string;
   application_date: string;
-  status: 'saved' | 'applied' | 'interview' | 'offer' | 'rejected' | 'withdrawn';
+  status: ApplicationStatus;
   notes?: string;
   resume?: string;
   cover_letter?: string;
-  resume_url?: string; // Added for frontend compatibility
-  cover_letter_url?: string; // Added for frontend compatibility
+  resume_url?: string;
+  cover_letter_url?: string;
   resume_content?: string;
   cover_letter_content?: string;
   timeline_events?: TimelineEvent[];
@@ -248,7 +256,7 @@ export interface CreateApplicationData {
   location?: string;
   salary_range?: string;
   application_date?: string;
-  status?: string;
+  status?: ApplicationStatus;
   notes?: string;
   resume_url?: string;
   cover_letter_url?: string;
@@ -271,7 +279,8 @@ export const applicationAPI = {
   create: (data: CreateApplicationData) => api.post<Application>('/applications/', data),
   update: (id: number, data: Partial<Application>) => api.patch<Application>(`/applications/${id}/`, data),
   delete: (id: number) => api.delete(`/applications/${id}/`),
-  updateStatus: (id: number, status: string) => api.patch<Application>(`/applications/${id}/status/`, { status }),
+  updateStatus: (id: number, status: ApplicationStatus) => 
+    api.patch<Application>(`/applications/${id}/status/`, { status }),
 
   addTimelineEvent: (
     id: number,
@@ -296,16 +305,12 @@ export const filesAPI = {
   uploadResume: (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post('/files/resume/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    return api.post('/files/resume/', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
   },
   uploadCoverLetter: (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post('/files/cover-letter/', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    return api.post('/files/cover-letter/', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
   },
   getFileContent: (url: string) => api.get('/file-content/', { params: { url } }),
 };
