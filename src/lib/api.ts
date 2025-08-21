@@ -1,6 +1,10 @@
 
+
 // import axios from 'axios';
-// const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || ' https://job-tracker-backend-ztii.onrender.com/api';
+
+// const API_BASE_URL =
+//   process.env.NEXT_PUBLIC_API_BASE_URL ||
+//   'https://job-tracker-backend-ztii.onrender.com/api';
 
 // const api = axios.create({
 //   baseURL: API_BASE_URL,
@@ -13,34 +17,44 @@
 // // Request interceptor
 // api.interceptors.request.use(
 //   (config) => {
-//     // You might want to add auth token here if needed
+//     // Add auth token here if needed
 //     // const token = localStorage.getItem('token');
 //     // if (token) {
 //     //   config.headers.Authorization = `Bearer ${token}`;
 //     // }
 //     return config;
 //   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
+//   (error) => Promise.reject(error)
 // );
 
 // // Response interceptor
 // api.interceptors.response.use(
 //   (response) => response,
 //   (error) => {
-//     const message = error.response?.data?.message || 
-//                    error.response?.data?.detail || 
-//                    error.message || 
-//                    'An error occurred';
-//     return Promise.reject({ 
-//       message, 
+//     const message =
+//       error.response?.data?.message ||
+//       error.response?.data?.detail ||
+//       error.message ||
+//       'An error occurred';
+//     return Promise.reject({
+//       message,
 //       status: error.response?.status,
-//       data: error.response?.data 
+//       data: error.response?.data,
 //     });
 //   }
 // );
 
+// // ------------------ TYPES ------------------
+
+// export interface TimelineEvent {
+//   id: number;
+//   event_type: string;
+//   title: string;
+//   description?: string;
+//   date: string;
+//   completed: boolean;
+//   created_at: string;
+// }
 
 // export interface Application {
 //   id: number;
@@ -52,23 +66,13 @@
 //   application_date: string;
 //   status: 'saved' | 'applied' | 'interview' | 'offer' | 'rejected' | 'withdrawn';
 //   notes?: string;
-//   resume?: string;  // Changed from resume_url
-//   cover_letter?: string;  // Changed from cover_letter_url
+//   resume?: string;
+//   cover_letter?: string;
 //   resume_content?: string;
 //   cover_letter_content?: string;
 //   timeline_events?: TimelineEvent[];
 //   created_at: string;
 //   updated_at: string;
-// }
-
-// export interface TimelineEvent {
-//   id: number;
-//   event_type: string;
-//   title: string;
-//   description?: string;
-//   date: string;
-//   completed: boolean;
-//   created_at: string;
 // }
 
 // export interface DashboardStats {
@@ -94,36 +98,41 @@
 //   cover_letter_content?: string;
 // }
 
-// // API functions
+// export interface AnalyticsData {
+//   date: string;
+//   applications_count: number;
+//   interviews_count: number;
+//   offers_count: number;
+// }
+
+
+// // ------------------ API FUNCTIONS ------------------
+
 // export const applicationAPI = {
 //   getAll: () => api.get<Application[]>('/applications/'),
 //   getById: (id: number) => api.get<Application>(`/applications/${id}/`),
 //   create: (data: CreateApplicationData) => api.post<Application>('/applications/', data),
 //   update: (id: number, data: Partial<Application>) => api.patch<Application>(`/applications/${id}/`, data),
 //   delete: (id: number) => api.delete(`/applications/${id}/`),
-//   updateStatus: (id: number, status: string) => 
-//     api.patch<Application>(`/applications/${id}/status/`, { status }),  
-//   addTimelineEvent: (id: number, data: { 
-//     event_type: string; 
-//     title: string; 
-//     description?: string; 
-//     date: string; 
-//     completed?: boolean 
-//   }) => api.post<TimelineEvent>(`/applications/${id}/timeline/`, data),
+//   updateStatus: (id: number, status: string) => api.patch<Application>(`/applications/${id}/status/`, { status }),
+
+//   addTimelineEvent: (
+//     id: number,
+//     data: { event_type: string; title: string; description?: string; date: string; completed?: boolean }
+//   ) => api.post<TimelineEvent>(`/applications/${id}/timeline/`, data),
+
 //   getTimelineEvents: (id: number) => api.get<TimelineEvent[]>(`/applications/${id}/timeline/events/`),
 
-//     updateTimelineEvent: (appId: number, eventId: number, data: Partial<TimelineEvent>) =>
+//   updateTimelineEvent: (appId: number, eventId: number, data: Partial<TimelineEvent>) =>
 //     api.patch<TimelineEvent>(`/applications/${appId}/timeline/${eventId}/`, data),
+
 //   deleteTimelineEvent: (appId: number, eventId: number) =>
 //     api.delete(`/applications/${appId}/timeline/${eventId}/`),
 // };
 
-
-
 // export const statsAPI = {
 //   getDashboard: () => api.get<DashboardStats>('/stats/dashboard/'),
-//   getAnalytics: (period: string = '30d') => 
-//     api.get<AnalyticsData[]>(`/stats/analytics/?period=${period}`),
+//   getAnalytics: (period: string = '30d') => api.get<AnalyticsData[]>(`/stats/analytics/?period=${period}`),
 // };
 
 // export const filesAPI = {
@@ -131,22 +140,20 @@
 //     const formData = new FormData();
 //     formData.append('file', file);
 //     return api.post('/files/resume/', formData, {
-//       headers: { 'Content-Type': 'multipart/form-data' }
+//       headers: { 'Content-Type': 'multipart/form-data' },
 //     });
 //   },
 //   uploadCoverLetter: (file: File) => {
 //     const formData = new FormData();
 //     formData.append('file', file);
 //     return api.post('/files/cover-letter/', formData, {
-//       headers: { 'Content-Type': 'multipart/form-data' }
+//       headers: { 'Content-Type': 'multipart/form-data' },
 //     });
 //   },
 //   getFileContent: (url: string) => api.get('/file-content/', { params: { url } }),
 // };
 
 // export default api;
-
-
 
 
 import axios from 'axios';
@@ -217,6 +224,8 @@ export interface Application {
   notes?: string;
   resume?: string;
   cover_letter?: string;
+  resume_url?: string; // Added for frontend compatibility
+  cover_letter_url?: string; // Added for frontend compatibility
   resume_content?: string;
   cover_letter_content?: string;
   timeline_events?: TimelineEvent[];
@@ -253,7 +262,6 @@ export interface AnalyticsData {
   interviews_count: number;
   offers_count: number;
 }
-
 
 // ------------------ API FUNCTIONS ------------------
 
