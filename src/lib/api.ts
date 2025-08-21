@@ -249,11 +249,11 @@ export interface CreateApplicationData {
 
 export interface AnalyticsData {
   date: string;
-  total_applications: number;
-  interviews: number;
-  offers: number;
-  // Add any other fields your analytics endpoint returns
+  applications_count: number;
+  interviews_count: number;
+  offers_count: number;
 }
+
 
 // ------------------ API FUNCTIONS ------------------
 
