@@ -167,7 +167,7 @@ const API_BASE_URL =
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  timeout: 90000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -183,7 +183,7 @@ api.interceptors.request.use(
     console.log("Current user:", user); // <-- add this to debug
     if (user) {
       config.headers['X-User-UID'] = user.uid;
-      console.log("Header sent:", config.headers['X-User-UID']); // <-- debug
+      // console.log("Header sent:", config.headers['X-User-UID']); // <-- debug
     }
     return config;
   },
