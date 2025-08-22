@@ -211,6 +211,7 @@ import { useRouter } from 'next/router';
 import { FiMenu, FiX, FiHome, FiBriefcase, FiBarChart2, FiPlus, FiLogOut, FiUser } from 'react-icons/fi';
 import { auth } from '../lib/firebase'; // Adjust the import path to your Firebase config
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
+import { Briefcase } from "lucide-react";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -260,12 +261,78 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   // Show loading state while checking authentication
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-         </div>
+       <div className="flex justify-center items-center min-h-[60vh]">
+      <div className="relative flex flex-col items-center">
+        {/* Original Spinner - UNCHANGED */}
+        <div className="relative mb-10">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-2 sm:border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-2 sm:border-4 border-transparent border-r-blue-500 rounded-full animate-spin animate-reverse"></div>
+        </div>
+        
+        {/* Clean, Modern Text */}
+        <div className="relative group">
+          {/* Subtle background glow */}
+          <div className="absolute -inset-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 rounded-lg blur-sm group-hover:blur-md transition-all duration-700"></div>
+          
+          {/* Main text container */}
+          <div className="relative flex items-center gap-4 px-6 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg">
+            <Briefcase className="w-5 h-5 text-purple-400 animate-pulse" />
+            
+            <div className="flex gap-1">
+              {["J", "O", "B"].map((letter, i) => (
+                <span
+                  key={i}
+                  className="text-xl sm:text-2xl font-semibold text-purple-400 animate-[fadeSlide_1.2s_ease-out_infinite]"
+                  style={{ animationDelay: `${i * 0.1}s` }}
+                >
+                  {letter}
+                </span>
+              ))}
+              
+              <span className="text-xl sm:text-2xl font-semibold text-gray-400 mx-2">/</span>
+              
+              {["T", "R", "A", "C", "K", "E", "R"].map((letter, i) => (
+                <span
+                  key={i}
+                  className="text-xl sm:text-2xl font-semibold text-blue-400 animate-[fadeSlide_1.2s_ease-out_infinite]"
+                  style={{ animationDelay: `${(i + 4) * 0.1}s` }}
+                >
+                  {letter}
+                </span>
+              ))}
+            </div>
+          </div>
+          
+          {/* Minimal loading indicator */}
+          <div className="mt-4 flex justify-center">
+            <div className="flex gap-1">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-[dot_1.4s_ease-in-out_infinite]"
+                  style={{ animationDelay: `${i * 0.16}s` }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-    );
+      
+      <style jsx>{`
+        @keyframes fadeSlide {
+          0%, 60% { opacity: 0.4; transform: translateY(0px); }
+          30% { opacity: 1; transform: translateY(-2px); }
+          100% { opacity: 0.4; transform: translateY(0px); }
+        }
+        
+        @keyframes dot {
+          0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+          40% { opacity: 1; transform: scale(1.2); }
+        }
+      `}</style>
+    </div>
+  );
+    
   }
 
   // Don't render the layout if user is not authenticated

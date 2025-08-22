@@ -491,7 +491,7 @@ const Dashboard: React.FC = () => {
                   <p className="text-white/60 text-sm md:text-base">Your most recent job applications</p>
                 </div>
                 <button 
-                  onClick={() => router.push('/applications')}
+                  onClick={() => router.push('/add-application')}
                   className="group flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all duration-200 text-sm md:text-base self-end sm:self-auto"
                 >
                   View all 
