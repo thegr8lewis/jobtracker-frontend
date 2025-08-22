@@ -153,10 +153,12 @@
 // };
 
 // export default api;
+// https://job-tracker-backend-ztii.onrender.com/api
 
 
 
 import axios from 'axios';
+import { getAuth } from "firebase/auth";
 
 // Base URL
 const API_BASE_URL =
@@ -173,15 +175,21 @@ const api = axios.create({
 
 // ------------------ INTERCEPTORS ------------------
 
-// Request interceptor (add auth token if needed)
+
 api.interceptors.request.use(
-  (config) => {
-    // const token = localStorage.getItem('token');
-    // if (token) config.headers.Authorization = `Bearer ${token}`;
+  async (config) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    console.log("Current user:", user); // <-- add this to debug
+    if (user) {
+      config.headers['X-User-UID'] = user.uid;
+      console.log("Header sent:", config.headers['X-User-UID']); // <-- debug
+    }
     return config;
   },
   (error) => Promise.reject(error)
 );
+
 
 // Response interceptor
 api.interceptors.response.use(

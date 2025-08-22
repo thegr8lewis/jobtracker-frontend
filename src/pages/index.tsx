@@ -309,6 +309,8 @@ import {
 } from 'react-icons/fi';
 import ProtectedRoute from '../components/ProtectedRoute';
 import { useAuth } from '../lib/auth-context';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -320,7 +322,16 @@ const Dashboard: React.FC = () => {
   const { logout, user } = useAuth();
 
   useEffect(() => {
-    fetchDashboardData();
+      const auth = getAuth();
+
+  // Wait for Firebase to initialize and get current user
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    if (currentUser) {
+      fetchDashboardData(); // only now X-User-UID will be attached
+    }
+  });
+
+  return () => unsubscribe();
   }, []);
 
   const fetchDashboardData = async () => {
@@ -383,9 +394,12 @@ const Dashboard: React.FC = () => {
   if (loading) {
     return (
       <Layout>
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="w-16 h-16 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
+        <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="relative">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-2 sm:border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 border-2 sm:border-4 border-transparent border-r-blue-500 rounded-full animate-spin animate-reverse"></div>
         </div>
+      </div>
       </Layout>
     );
   }

@@ -263,8 +263,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Loading...</p>
-        </div>
+         </div>
       </div>
     );
   }
@@ -377,14 +376,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             {/* User info in header with dropdown (now visible on all screen sizes) */}
             <div className="relative group">
               <div className="flex items-center space-x-3 cursor-pointer p-2 rounded-lg hover:bg-gray-700 transition-colors">
-                <div className="text-right">
+                {/* <div className="text-right">
                   <p className="text-sm font-medium text-white">
                     {user.displayName || 'User'}
                   </p>
                   <p className="text-xs text-gray-400">
                     {user.email}
                   </p>
-                </div>
+                </div> */}
                 {user.photoURL ? (
                   <img
                     src={user.photoURL}

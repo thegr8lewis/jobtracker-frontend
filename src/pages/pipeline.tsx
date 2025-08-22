@@ -693,7 +693,7 @@ const PipelinePage: React.FC = () => {
   }
 
   const handleAddApplication = () => router.push("/add-application")
-  const handleJobClick = (applicationId: number) => router.push(`/applications/${applicationId}`)
+ const handleJobClick = (applicationId: number) => router.push(`/application/${applicationId}`)
   const handleEditApplication = (applicationId: number) => router.push(`/applications/${applicationId}/edit`)
 
   const getApplicationsByStatus = (status: ApplicationStatus) =>
