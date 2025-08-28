@@ -563,7 +563,8 @@ const AddApplicationPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.company_name.trim() || !formData.job_title.trim() || !formData.job_posting_url.trim()) {
+    // if (!formData.company_name.trim() || !formData.job_title.trim() || !formData.job_posting_url.trim()) {
+      if (!formData.company_name.trim() || !formData.job_title.trim() || !formData.job_posting_url?.trim()) {
       setError('Company name, job title, and job posting URL are required');
       return;
     }
