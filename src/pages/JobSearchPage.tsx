@@ -90,7 +90,7 @@ const JobSearchPage: React.FC = () => {
       
       await jobAPI.createFilter({
         ...newFilter,
-        user_uid
+        // user_uid
       })
       
       setShowFilterDialog(false)
