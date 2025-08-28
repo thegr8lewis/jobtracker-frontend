@@ -173,17 +173,27 @@ const PipelinePage: React.FC = () => {
       )
     
     // Apply sorting if configured
-    if (sortConfig) {
-      filteredApplications = filteredApplications.sort((a, b) => {
-        if (a[sortConfig.key as keyof Application] < b[sortConfig.key as keyof Application]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1
-        }
-        if (a[sortConfig.key as keyof Application] > b[sortConfig.key as keyof Application]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1
-        }
-        return 0
-      })
+    // Apply sorting if configured
+if (sortConfig && sortConfig.key) {
+  filteredApplications = filteredApplications.sort((a, b) => {
+    const key = sortConfig.key as keyof Application;
+    const valueA = a[key];
+    const valueB = b[key];
+    
+    // Handle undefined values
+    if (valueA === undefined || valueB === undefined) {
+      return 0; // or handle as you prefer
     }
+    
+    if (valueA < valueB) {
+      return sortConfig.direction === 'ascending' ? -1 : 1;
+    }
+    if (valueA > valueB) {
+      return sortConfig.direction === 'ascending' ? 1 : -1;
+    }
+    return 0;
+  });
+}
     
     return filteredApplications
   }
