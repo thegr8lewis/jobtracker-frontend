@@ -257,6 +257,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { text: 'Analytics', path: '/analytics', icon: <FiBarChart2 className="w-5 h-5" /> },
     { text: 'Job SearchPage', path: '/JobSearchPage', icon: <FiSearch className="w-5 h-5" /> },
     { text: 'Add Application', path: '/add-application', icon: <FiPlus className="w-5 h-5" /> },
+    { text: 'settings', path: '/settings', icon: <FiPlus className="w-5 h-5" /> },
   ];
 
   // Show loading state while checking authentication

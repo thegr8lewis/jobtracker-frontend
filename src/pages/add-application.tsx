@@ -1,4 +1,3 @@
-
 // import React, { useState, useRef } from 'react';
 // import { useRouter } from 'next/router';
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -202,7 +201,7 @@
 //     <div className="border border-white/20 rounded-lg p-4 bg-white/5">
 //       {!file ? (
 //         <div 
-//           className="border-2 border-dashed border-white/20 rounded-lg p-6 text-center cursor-pointer hover:bg-white/5 transition-colors"
+//           className="border-2 border-dashed border-white/20 rounded-lg p-4 md:p-6 text-center cursor-pointer hover:bg-white/5 transition-colors"
 //           onClick={() => inputRef.current?.click()}
 //         >
 //           <input
@@ -213,8 +212,8 @@
 //             className="hidden"
 //           />
 //           <div className="flex flex-col items-center">
-//             <FiUpload className="w-8 h-8 text-white/60 mb-2" />
-//             <p className="text-white/80">Click to upload {type === 'resume' ? 'resume' : 'cover letter'}</p>
+//             <FiUpload className="w-6 h-6 md:w-8 md:h-8 text-white/60 mb-2" />
+//             <p className="text-white/80 text-sm md:text-base">Click to upload {type === 'resume' ? 'resume' : 'cover letter'}</p>
 //             <p className="text-xs text-white/50 mt-1">PDF, Word or Text (max 5MB)</p>
 //           </div>
 //         </div>
@@ -223,12 +222,12 @@
 //           <div className="flex items-center justify-between">
 //             <div className="flex items-center">
 //               {type === 'resume' ? (
-//                 <FiFileText className="w-5 h-5 text-blue-400 mr-3" />
+//                 <FiFileText className="w-4 h-4 md:w-5 md:h-5 text-blue-400 mr-2 md:mr-3" />
 //               ) : (
-//                 <FiFile className="w-5 h-5 text-purple-400 mr-3" />
+//                 <FiFile className="w-4 h-4 md:w-5 md:h-5 text-purple-400 mr-2 md:mr-3" />
 //               )}
 //               <div>
-//                 <p className="text-white/90">{file.name}</p>
+//                 <p className="text-white/90 text-sm md:text-base">{file.name}</p>
 //                 <p className="text-xs text-white/50">
 //                   {(file.size / 1024).toFixed(1)} KB • {file.type.split('/')[1].toUpperCase()}
 //                 </p>
@@ -239,7 +238,7 @@
 //               onClick={() => removeFile(type)}
 //               className="text-white/50 hover:text-white/80"
 //             >
-//               <FiX className="w-5 h-5" />
+//               <FiX className="w-4 h-4 md:w-5 md:h-5" />
 //             </button>
 //           </div>
           
@@ -248,7 +247,7 @@
 //               <p className="text-sm text-white/80 mb-2">Preview:</p>
 //               <iframe 
 //                 src={preview} 
-//                 className="w-full h-64 border border-white/10 rounded"
+//                 className="w-full h-48 md:h-64 border border-white/10 rounded"
 //                 title="Resume preview"
 //               />
 //             </div>
@@ -261,83 +260,83 @@
 //   return (
 //     <Layout>
 //       <div className="max-w-3xl mx-auto px-4 py-6">
-//         <div className="flex items-center mb-6">
+//         <div className="flex items-center mb-4 md:mb-6">
 //           <button
 //             onClick={() => router.back()}
-//             className="flex items-center text-white/70 hover:text-white mr-4"
+//             className="flex items-center text-white/70 hover:text-white mr-4 text-sm md:text-base p-1"
 //           >
-//             <FiArrowLeft className="w-5 h-5 mr-1" />
+//             <FiArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-1" />
 //             Back
 //           </button>
-//           <h1 className="text-2xl font-bold">Add New Application</h1>
+//           <h1 className="text-xl md:text-2xl font-bold">Add New Application</h1>
 //         </div>
         
 //         {error && (
-//           <div className="bg-red-500/20 border border-red-500/50 text-white p-4 rounded-lg mb-6">
+//           <div className="bg-red-500/20 border border-red-500/50 text-white p-3 md:p-4 rounded-lg mb-4 md:mb-6 text-sm md:text-base">
 //             {error}
 //           </div>
 //         )}
         
-//         <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 shadow-lg">
-//           <form onSubmit={handleSubmit} className="space-y-6">
-//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//         <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 md:p-6 shadow-lg">
+//           <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 //               <div className="space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Company Name *</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Company Name *</label>
 //                 <input
 //                   type="text"
 //                   value={formData.company_name}
 //                   onChange={(e) => handleInputChange('company_name', e.target.value)}
 //                   required
 //                   disabled={loading}
-//                   className="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                   className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
 //                   placeholder="e.g., Acme Corp"
 //                 />
 //               </div>
               
 //               <div className="space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Job Title *</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Job Title *</label>
 //                 <input
 //                   type="text"
 //                   value={formData.job_title}
 //                   onChange={(e) => handleInputChange('job_title', e.target.value)}
 //                   required
 //                   disabled={loading}
-//                   className="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                   className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
 //                   placeholder="e.g., Software Engineer"
 //                 />
 //               </div>
               
 //               <div className="space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Location</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Location</label>
 //                 <input
 //                   type="text"
 //                   value={formData.location}
 //                   onChange={(e) => handleInputChange('location', e.target.value)}
 //                   disabled={loading}
-//                   className="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                   className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
 //                   placeholder="e.g., Remote, New York, NY"
 //                 />
 //               </div>
               
 //               <div className="space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Salary Range</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Salary Range</label>
 //                 <input
 //                   type="text"
 //                   value={formData.salary_range}
 //                   onChange={(e) => handleInputChange('salary_range', e.target.value)}
 //                   disabled={loading}
-//                   className="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                   className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
 //                   placeholder="e.g., $80,000 - $120,000"
 //                 />
 //               </div>
               
 //               <div className="space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Status</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Status</label>
 //                 <select
 //                   value={formData.status}
 //                   onChange={(e) => handleInputChange('status', e.target.value)}
 //                   disabled={loading}
-//                   className="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                   className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
 //                 >
 //                   <option value="saved">Saved</option>
 //                   <option value="applied">Applied</option>
@@ -349,7 +348,7 @@
 //               </div>
               
 //               <div className="space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Application Date</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Application Date</label>
 //                 <LocalizationProvider dateAdapter={AdapterDayjs}>
 //                   <DatePicker
 //                     value={applicationDate}
@@ -357,7 +356,7 @@
 //                     disabled={loading}
 //                     slotProps={{
 //                       textField: {
-//                         className: 'w-full bg-gray-700/50 border-gray-600',
+//                         className: 'w-full bg-gray-700/50 border-gray-600 text-sm md:text-base',
 //                       },
 //                     }}
 //                   />
@@ -365,30 +364,30 @@
 //               </div>
               
 //               <div className="md:col-span-2 space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Job Posting URL</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Job Posting URL</label>
 //                 <input
 //                   type="url"
 //                   value={formData.job_posting_url}
 //                   onChange={(e) => handleInputChange('job_posting_url', e.target.value)}
 //                   disabled={loading}
-//                   className="w-full p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                   className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
 //                   placeholder="https://example.com/job-posting"
 //                 />
 //               </div>
               
 //               <div className="md:col-span-2 space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Notes</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Notes</label>
 //                 <textarea
 //                   value={formData.notes}
 //                   onChange={(e) => handleInputChange('notes', e.target.value)}
 //                   disabled={loading}
-//                   className="w-full p-3 min-h-[120px] bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+//                   className="w-full p-2 md:p-3 min-h-[100px] md:min-h-[120px] bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
 //                   placeholder="Additional notes about this application..."
 //                 />
 //               </div>
               
 //               {/* <div className="md:col-span-2 space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Resume</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Resume</label>
 //                 <FileUploadCard 
 //                   type="resume" 
 //                   file={resumeFile} 
@@ -398,7 +397,7 @@
 //               </div>
               
 //               <div className="md:col-span-2 space-y-2">
-//                 <label className="block text-sm font-medium text-white/80">Cover Letter</label>
+//                 <label className="block text-xs md:text-sm font-medium text-white/80">Cover Letter</label>
 //                 <FileUploadCard 
 //                   type="coverLetter" 
 //                   file={coverLetterFile} 
@@ -407,28 +406,28 @@
 //               </div> */}
 //             </div>
             
-//             <div className="flex justify-end gap-4 pt-4">
+//             <div className="flex flex-col-reverse md:flex-row justify-end gap-3 md:gap-4 pt-4">
 //               <button
 //                 type="button"
 //                 onClick={() => router.back()}
 //                 disabled={loading}
-//                 className="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+//                 className="px-4 py-2 md:px-6 md:py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm md:text-base"
 //               >
 //                 Cancel
 //               </button>
 //               <button
 //                 type="submit"
 //                 disabled={loading}
-//                 className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center justify-center gap-2"
+//                 className="px-4 py-2 md:px-6 md:py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm md:text-base"
 //               >
 //                 {loading ? (
 //                   <>
-//                     <FiLoader className="w-5 h-5 animate-spin" />
+//                     <FiLoader className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
 //                     Processing...
 //                   </>
 //                 ) : (
 //                   <>
-//                     <FiPlus className="w-5 h-5" />
+//                     <FiPlus className="w-4 h-4 md:w-5 md:h-5" />
 //                     Add Application
 //                   </>
 //                 )}
@@ -437,7 +436,7 @@
 //           </form>
 //         </div>
         
-//         <p className="mt-4 text-sm text-white/60">
+//         <p className="mt-4 text-xs md:text-sm text-white/60">
 //           * Required fields. You can edit all information later from the application details page.
 //         </p>
 //       </div>
@@ -446,6 +445,9 @@
 // };
 
 // export default AddApplicationPage;
+
+
+"use client";
 
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
@@ -466,7 +468,7 @@ import {
   FiArrowLeft
 } from 'react-icons/fi';
 
-const AddApplicationPage = () => {
+const AddApplicationPage: React.FC = () => {
   const [formData, setFormData] = useState<CreateApplicationData>({
     company_name: '',
     job_title: '',
@@ -561,8 +563,8 @@ const AddApplicationPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.company_name.trim() || !formData.job_title.trim()) {
-      setError('Company name and job title are required');
+    if (!formData.company_name.trim() || !formData.job_title.trim() || !formData.job_posting_url.trim()) {
+      setError('Company name, job title, and job posting URL are required');
       return;
     }
 
@@ -621,36 +623,16 @@ const AddApplicationPage = () => {
     }
   };
 
-  if (success) {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="glass-card p-6 text-center max-w-md">
-            <FiCheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold text-white mb-2">Application Added Successfully!</h2>
-            <p className="text-white/80">Redirecting to pipeline...</p>
-            <FiLoader className="w-6 h-6 text-green-400 animate-spin mx-auto mt-4" />
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-
-  const FileUploadCard = ({ 
-    type, 
-    file, 
-    inputRef,
-    preview
-  }: {
+  const FileUploadCard: React.FC<{ 
     type: 'resume' | 'coverLetter';
     file: File | null;
     inputRef: React.RefObject<HTMLInputElement>;
     preview?: string | null;
-  }) => (
-    <div className="border border-white/20 rounded-lg p-4 bg-white/5">
+  }> = ({ type, file, inputRef, preview }) => (
+    <div className="border border-white/10 rounded-lg p-4 bg-white/5 backdrop-blur-sm">
       {!file ? (
         <div 
-          className="border-2 border-dashed border-white/20 rounded-lg p-4 md:p-6 text-center cursor-pointer hover:bg-white/5 transition-colors"
+          className="border-2 border-dashed border-white/20 rounded-lg p-4 text-center cursor-pointer hover:bg-white/10 transition-all"
           onClick={() => inputRef.current?.click()}
         >
           <input
@@ -661,8 +643,8 @@ const AddApplicationPage = () => {
             className="hidden"
           />
           <div className="flex flex-col items-center">
-            <FiUpload className="w-6 h-6 md:w-8 md:h-8 text-white/60 mb-2" />
-            <p className="text-white/80 text-sm md:text-base">Click to upload {type === 'resume' ? 'resume' : 'cover letter'}</p>
+            <FiUpload className="w-6 h-6 text-white/60 mb-2" />
+            <p className="text-white/80 text-sm">Upload {type === 'resume' ? 'resume' : 'cover letter'}</p>
             <p className="text-xs text-white/50 mt-1">PDF, Word or Text (max 5MB)</p>
           </div>
         </div>
@@ -671,12 +653,12 @@ const AddApplicationPage = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               {type === 'resume' ? (
-                <FiFileText className="w-4 h-4 md:w-5 md:h-5 text-blue-400 mr-2 md:mr-3" />
+                <FiFileText className="w-5 h-5 text-blue-400 mr-3" />
               ) : (
-                <FiFile className="w-4 h-4 md:w-5 md:h-5 text-purple-400 mr-2 md:mr-3" />
+                <FiFile className="w-5 h-5 text-purple-400 mr-3" />
               )}
               <div>
-                <p className="text-white/90 text-sm md:text-base">{file.name}</p>
+                <p className="text-white/90 text-sm">{file.name}</p>
                 <p className="text-xs text-white/50">
                   {(file.size / 1024).toFixed(1)} KB • {file.type.split('/')[1].toUpperCase()}
                 </p>
@@ -685,9 +667,9 @@ const AddApplicationPage = () => {
             <button
               type="button"
               onClick={() => removeFile(type)}
-              className="text-white/50 hover:text-white/80"
+              className="text-white/50 hover:text-white transition-colors"
             >
-              <FiX className="w-4 h-4 md:w-5 md:h-5" />
+              <FiX className="w-5 h-5" />
             </button>
           </div>
           
@@ -696,7 +678,7 @@ const AddApplicationPage = () => {
               <p className="text-sm text-white/80 mb-2">Preview:</p>
               <iframe 
                 src={preview} 
-                className="w-full h-48 md:h-64 border border-white/10 rounded"
+                className="w-full h-64 border border-white/10 rounded-lg"
                 title="Resume preview"
               />
             </div>
@@ -706,188 +688,218 @@ const AddApplicationPage = () => {
     </div>
   );
 
+  if (success) {
+    return (
+      <Layout>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-white/10 p-6 max-w-md w-full shadow-2xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent"></div>
+            <div className="relative space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="p-3 rounded-lg bg-green-500/20 border border-green-500/30">
+                  <FiCheckCircle className="w-6 h-6 text-green-400" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-white">Application Added</h2>
+                  <p className="text-white/60 text-base">Redirecting to pipeline...</p>
+                </div>
+              </div>
+              <div className="flex justify-center">
+                <FiLoader className="w-6 h-6 text-green-400 animate-spin" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto px-4 py-6">
-        <div className="flex items-center mb-4 md:mb-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center text-white/70 hover:text-white mr-4 text-sm md:text-base p-1"
-          >
-            <FiArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-1" />
-            Back
-          </button>
-          <h1 className="text-xl md:text-2xl font-bold">Add New Application</h1>
-        </div>
-        
-        {error && (
-          <div className="bg-red-500/20 border border-red-500/50 text-white p-3 md:p-4 rounded-lg mb-4 md:mb-6 text-sm md:text-base">
-            {error}
-          </div>
-        )}
-        
-        <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-4 md:p-6 shadow-lg">
-          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-              <div className="space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Company Name *</label>
-                <input
-                  type="text"
-                  value={formData.company_name}
-                  onChange={(e) => handleInputChange('company_name', e.target.value)}
-                  required
-                  disabled={loading}
-                  className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                  placeholder="e.g., Acme Corp"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Job Title *</label>
-                <input
-                  type="text"
-                  value={formData.job_title}
-                  onChange={(e) => handleInputChange('job_title', e.target.value)}
-                  required
-                  disabled={loading}
-                  className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                  placeholder="e.g., Software Engineer"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Location</label>
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => handleInputChange('location', e.target.value)}
-                  disabled={loading}
-                  className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                  placeholder="e.g., Remote, New York, NY"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Salary Range</label>
-                <input
-                  type="text"
-                  value={formData.salary_range}
-                  onChange={(e) => handleInputChange('salary_range', e.target.value)}
-                  disabled={loading}
-                  className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                  placeholder="e.g., $80,000 - $120,000"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Status</label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => handleInputChange('status', e.target.value)}
-                  disabled={loading}
-                  className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+        <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+          {error && (
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-500/10 to-rose-500/10 border border-red-500/20 backdrop-blur-sm">
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent"></div>
+              <div className="relative p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3 flex-1">
+                  <div className="p-2 rounded-lg bg-red-500/20">
+                    <FiX className="w-5 h-5 text-red-400" />
+                  </div>
+                  <span className="text-white font-medium text-base truncate">{error}</span>
+                </div>
+                <button
+                  onClick={() => setError(null)}
+                  className="p-2 rounded-lg hover:bg-white/10 text-red-400 hover:text-white transition-colors"
                 >
-                  <option value="saved">Saved</option>
-                  <option value="applied">Applied</option>
-                  <option value="interview">Interview</option>
-                  <option value="offer">Offer</option>
-                  <option value="rejected">Rejected</option>
-                  <option value="withdrawn">Withdrawn</option>
-                </select>
+                  <FiX className="w-5 h-5" />
+                </button>
               </div>
-              
-              <div className="space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Application Date</label>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    value={applicationDate}
-                    onChange={(newValue) => setApplicationDate(newValue)}
+            </div>
+          )}
+
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div>
+                <button
+                  onClick={() => router.back()}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all border border-white/10 hover:border-white/20 mb-4"
+                >
+                  <FiArrowLeft className="w-4 h-4" />
+                  <span className="font-medium text-base">Back to Pipeline</span>
+                </button>
+                <h1 className="text-3xl font-bold text-white mb-2">Add New Application</h1>
+                <p className="text-white/60 text-base">Track a new job application</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/70">Company Name *</label>
+                  <input
+                    type="text"
+                    value={formData.company_name}
+                    onChange={(e) => handleInputChange('company_name', e.target.value)}
+                    required
                     disabled={loading}
-                    slotProps={{
-                      textField: {
-                        className: 'w-full bg-gray-700/50 border-gray-600 text-sm md:text-base',
-                      },
-                    }}
+                    className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm"
+                    placeholder="e.g., Acme Corp"
                   />
-                </LocalizationProvider>
-              </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/70">Job Title *</label>
+                  <input
+                    type="text"
+                    value={formData.job_title}
+                    onChange={(e) => handleInputChange('job_title', e.target.value)}
+                    required
+                    disabled={loading}
+                    className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm"
+                    placeholder="e.g., Software Engineer"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/70">Job Posting URL *</label>
+                  <input
+                    type="url"
+                    value={formData.job_posting_url}
+                    onChange={(e) => handleInputChange('job_posting_url', e.target.value)}
+                    required
+                    disabled={loading}
+                    className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm"
+                    placeholder="https://example.com/job-posting"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/70">Location</label>
+                  <input
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => handleInputChange('location', e.target.value)}
+                    disabled={loading}
+                    className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm"
+                    placeholder="e.g., Remote, New York, NY"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/70">Salary Range</label>
+                  <input
+                    type="text"
+                    value={formData.salary_range}
+                    onChange={(e) => handleInputChange('salary_range', e.target.value)}
+                    disabled={loading}
+                    className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm"
+                    placeholder="e.g., $80,000 - $120,000"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/70">Status</label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => handleInputChange('status', e.target.value)}
+                    disabled={loading}
+                    className="w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm"
+                  >
+                    <option value="saved">Saved</option>
+                    <option value="applied">Applied</option>
+                    <option value="interview">Interview</option>
+                    <option value="offer">Offer</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="withdrawn">Withdrawn</option>
+                  </select>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-white/70">Application Date</label>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      value={applicationDate}
+                      onChange={(newValue) => setApplicationDate(newValue)}
+                      disabled={loading}
+                      slotProps={{
+                        textField: {
+                          className: 'w-full px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm',
+                        },
+                      }}
+                    />
+                  </LocalizationProvider>
+                </div>
+                
+                <div className="md:col-span-2 space-y-2">
+                  <label className="block text-sm font-medium text-white/70">Notes</label>
+                  <textarea
+                    value={formData.notes}
+                    onChange={(e) => handleInputChange('notes', e.target.value)}
+                    disabled={loading}
+                    className="w-full px-3 py-2.5 min-h-[120px] rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/50 focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/30 transition-all text-sm"
+                    placeholder="Additional notes about this application..."
+                  />
+                </div>
+                
+                  </div>
               
-              <div className="md:col-span-2 space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Job Posting URL</label>
-                <input
-                  type="url"
-                  value={formData.job_posting_url}
-                  onChange={(e) => handleInputChange('job_posting_url', e.target.value)}
+              <div className="flex flex-col-reverse md:flex-row justify-end gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => router.back()}
                   disabled={loading}
-                  className="w-full p-2 md:p-3 bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                  placeholder="https://example.com/job-posting"
-                />
-              </div>
-              
-              <div className="md:col-span-2 space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Notes</label>
-                <textarea
-                  value={formData.notes}
-                  onChange={(e) => handleInputChange('notes', e.target.value)}
+                  className="px-6 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-white font-medium transition-colors border border-white/10 hover:border-white/20 text-base"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
                   disabled={loading}
-                  className="w-full p-2 md:p-3 min-h-[100px] md:min-h-[120px] bg-gray-700/50 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                  placeholder="Additional notes about this application..."
-                />
+                  className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-medium transition-all shadow-md hover:shadow-lg disabled:opacity-50 text-base flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <FiLoader className="w-5 h-5 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <FiPlus className="w-5 h-5" />
+                      Add Application
+                    </>
+                  )}
+                </button>
               </div>
-              
-              {/* <div className="md:col-span-2 space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Resume</label>
-                <FileUploadCard 
-                  type="resume" 
-                  file={resumeFile} 
-                  inputRef={resumeInputRef}
-                  preview={resumePreview}
-                />
-              </div>
-              
-              <div className="md:col-span-2 space-y-2">
-                <label className="block text-xs md:text-sm font-medium text-white/80">Cover Letter</label>
-                <FileUploadCard 
-                  type="coverLetter" 
-                  file={coverLetterFile} 
-                  inputRef={coverLetterInputRef}
-                />
-              </div> */}
-            </div>
-            
-            <div className="flex flex-col-reverse md:flex-row justify-end gap-3 md:gap-4 pt-4">
-              <button
-                type="button"
-                onClick={() => router.back()}
-                disabled={loading}
-                className="px-4 py-2 md:px-6 md:py-3 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm md:text-base"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-4 py-2 md:px-6 md:py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm md:text-base"
-              >
-                {loading ? (
-                  <>
-                    <FiLoader className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <FiPlus className="w-4 h-4 md:w-5 md:h-5" />
-                    Add Application
-                  </>
-                )}
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
+          
+          <p className="text-sm text-white/60">
+            * Required fields. You can edit all information later from the application details page.
+          </p>
         </div>
-        
-        <p className="mt-4 text-xs md:text-sm text-white/60">
-          * Required fields. You can edit all information later from the application details page.
-        </p>
       </div>
     </Layout>
   );

@@ -1,10 +1,11 @@
+
 // import axios from 'axios';
 // import { getAuth } from "firebase/auth";
 
 // // Base URL
 // const API_BASE_URL =
 //   process.env.NEXT_PUBLIC_API_BASE_URL ||
-//   'https://job-tracker-backend-ztii.onrender.com/api';
+//   'http://localhost:8000/api';
 
 // const api = axios.create({
 //   baseURL: API_BASE_URL,
@@ -16,21 +17,18 @@
 
 // // ------------------ INTERCEPTORS ------------------
 
-
 // api.interceptors.request.use(
 //   async (config) => {
 //     const auth = getAuth();
 //     const user = auth.currentUser;
-//     console.log("Current user:", user); // <-- add this to debug
+//     console.log("Current user:", user);
 //     if (user) {
 //       config.headers['X-User-UID'] = user.uid;
-//       // console.log("Header sent:", config.headers['X-User-UID']); // <-- debug
 //     }
 //     return config;
 //   },
 //   (error) => Promise.reject(error)
 // );
-
 
 // // Response interceptor
 // api.interceptors.response.use(
@@ -71,6 +69,7 @@
 
 // export interface Application {
 //   id: number;
+//   user_uid: string;
 //   company_name: string;
 //   job_title: string;
 //   job_posting_url?: string;
@@ -120,6 +119,42 @@
 //   offers_count: number;
 // }
 
+// // ------------------ NEW TYPES FOR JOB SEARCH ------------------
+
+// export interface Job {
+//   id: number;
+//   title: string;
+//   company: string;
+//   location: string;
+//   salary_min: number;
+//   salary_max: number;
+//   link: string;
+//   source: string;
+//   posted_at: string;
+//   fetched_at: string;
+// }
+
+// export interface JobFilter {
+//   id: number;
+//   user_uid: string;
+//   keywords: string[];
+//   locations: string[];
+//   salary_min: number;
+//   remote_only: boolean;
+//   providers: string[];
+//   created_at: string;
+//   updated_at: string;
+// }
+
+// export interface CreateJobFilterData {
+//   keywords: string[];
+//   locations: string[];
+//   salary_min?: number;
+//   remote_only?: boolean;
+//   providers?: string[];
+// }
+
+
 // // ------------------ API FUNCTIONS ------------------
 
 // export const applicationAPI = {
@@ -164,6 +199,25 @@
 //   getFileContent: (url: string) => api.get('/file-content/', { params: { url } }),
 // };
 
+// // ------------------ NEW JOB SEARCH API FUNCTIONS ------------------
+
+// export const jobAPI = {
+//   // Get jobs with optional search filters
+//   getAll: (params?: { q?: string; loc?: string }) => 
+//     api.get<Job[]>('/applications/jobs/', { params }),
+  
+//   // Job filters management
+//   getFilters: () => api.get<JobFilter[]>('/applications/filters/'),
+//   getFilter: (id: number) => api.get<JobFilter>(`/applications/filters/${id}/`),
+//   createFilter: (data: CreateJobFilterData) => api.post<JobFilter>('/applications/filters/', data),
+//   updateFilter: (id: number, data: Partial<JobFilter>) => 
+//     api.patch<JobFilter>(`/applications/filters/${id}/`, data),
+//   deleteFilter: (id: number) => api.delete(`/applications/filters/${id}/`),
+  
+//   // Trigger immediate job fetch
+//   triggerFetch: () => api.post('/applications/fetch-now/'),
+// };
+
 // export default api;
 
 
@@ -190,7 +244,6 @@ api.interceptors.request.use(
   async (config) => {
     const auth = getAuth();
     const user = auth.currentUser;
-    console.log("Current user:", user);
     if (user) {
       config.headers['X-User-UID'] = user.uid;
     }
@@ -233,6 +286,29 @@ export interface TimelineEvent {
   description?: string;
   date: string;
   completed: boolean;
+  created_at: string;
+}
+
+export interface EmailLog {
+  id: number;
+  application: number;
+  user_uid: string;
+  email_id: string;
+  thread_id?: string;
+  sender_email: string;
+  sender_name?: string;
+  subject: string;
+  snippet?: string;
+  received_date: string;
+  classification: string;
+  confidence_score: number;
+  ai_analysis: any;
+  suggested_status?: string;
+  processed: boolean;
+  processed_at?: string;
+  status_updated: boolean;
+  timeline_created: boolean;
+  user_reviewed: boolean;
   created_at: string;
 }
 
@@ -288,8 +364,6 @@ export interface AnalyticsData {
   offers_count: number;
 }
 
-// ------------------ NEW TYPES FOR JOB SEARCH ------------------
-
 export interface Job {
   id: number;
   title: string;
@@ -323,6 +397,13 @@ export interface CreateJobFilterData {
   providers?: string[];
 }
 
+export interface UserEmailSettings {
+  email_tracking_enabled: boolean;
+  gmail_connected: boolean;
+  auto_process_emails: boolean;
+  last_email_check: string | null;
+}
+
 // ------------------ API FUNCTIONS ------------------
 
 export const applicationAPI = {
@@ -346,6 +427,11 @@ export const applicationAPI = {
 
   deleteTimelineEvent: (appId: number, eventId: number) =>
     api.delete(`/applications/${appId}/timeline/${eventId}/`),
+
+  getEmailLogs: (applicationId: number) => 
+    api.get<EmailLog[]>(`/applications/${applicationId}/email-logs/`),
+
+  processEmails: () => api.post('/applications/email/process/'),
 };
 
 export const statsAPI = {
@@ -367,14 +453,10 @@ export const filesAPI = {
   getFileContent: (url: string) => api.get('/file-content/', { params: { url } }),
 };
 
-// ------------------ NEW JOB SEARCH API FUNCTIONS ------------------
-
 export const jobAPI = {
-  // Get jobs with optional search filters
   getAll: (params?: { q?: string; loc?: string }) => 
     api.get<Job[]>('/applications/jobs/', { params }),
   
-  // Job filters management
   getFilters: () => api.get<JobFilter[]>('/applications/filters/'),
   getFilter: (id: number) => api.get<JobFilter>(`/applications/filters/${id}/`),
   createFilter: (data: CreateJobFilterData) => api.post<JobFilter>('/applications/filters/', data),
@@ -382,8 +464,16 @@ export const jobAPI = {
     api.patch<JobFilter>(`/applications/filters/${id}/`, data),
   deleteFilter: (id: number) => api.delete(`/applications/filters/${id}/`),
   
-  // Trigger immediate job fetch
   triggerFetch: () => api.post('/applications/fetch-now/'),
+};
+
+export const emailAPI = {
+  connect: () => api.get('/applications/email/connect/'),
+  disconnect: () => api.post('/applications/email/disconnect/'),
+  process: () => api.post('/applications/email/process/'),
+  getSettings: () => api.get<UserEmailSettings>('/applications/email/settings/'),
+  updateSettings: (data: Partial<UserEmailSettings>) => 
+    api.patch<UserEmailSettings>('/applications/email/settings/', data),
 };
 
 export default api;
