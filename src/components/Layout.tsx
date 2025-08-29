@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       await signOut(auth);
       router.push('/login');
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error('Error signing outt:', error);
     }
   };
 
