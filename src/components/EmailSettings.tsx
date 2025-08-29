@@ -1,277 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import { FiMail, FiLink, FiCheckCircle, FiXCircle, FiLoader, FiCheck } from 'react-icons/fi';
-// import { useAuth } from '../lib/auth-context';
-// import api from '../lib/api';
-
-// interface EmailSettingsProps {
-//   onConnected?: () => void;
-//   onDisconnected?: () => void;
-// }
-
-// interface EmailSettings {
-//   gmail_connected: boolean;
-//   connected_email?: string;
-// }
-
-// const EmailSettings: React.FC<EmailSettingsProps> = ({ onConnected, onDisconnected }) => {
-//   const { user } = useAuth();
-//   const [loading, setLoading] = useState(false);
-//   const [error, setError] = useState<string | null>(null);
-//   const [success, setSuccess] = useState<string | null>(null);
-//   const [emailSettings, setEmailSettings] = useState<EmailSettings>({ gmail_connected: false });
-//   const [fetchingSettings, setFetchingSettings] = useState(true);
-
-//   // Helper function to automatically include X-User-UID
-//   const apiWithUid = (method: 'get' | 'post', url: string, data?: any) => {
-//     if (!user) throw new Error('User not logged in');
-//     const config = { headers: { 'X-User-UID': user.uid } };
-//     return method === 'get' ? api.get(url, config) : api.post(url, data || {}, config);
-//   };
-
-//   // Fetch email settings on mount
-//   useEffect(() => {
-//     const fetchEmailSettings = async () => {
-//       if (!user) return;
-
-//       try {
-//         const response = await apiWithUid('get', '/applications/email/settings/');
-//         setEmailSettings(response.data);
-//       } catch (err) {
-//         console.error('Failed to fetch email settings:', err);
-//       } finally {
-//         setFetchingSettings(false);
-//       }
-//     };
-
-//     fetchEmailSettings();
-//   }, [user]);
-
-//   const connectGmail = async () => {
-//     if (!user) return;
-
-//     setLoading(true);
-//     setError(null);
-//     setSuccess(null);
-
-//     try {
-//       const response = await apiWithUid('get', '/applications/email/connect/');
-//       const { auth_url } = response.data;
-
-//       const authWindow = window.open(auth_url, 'gmail_auth', 'width=600,height=700');
-
-//       const checkWindow = setInterval(async () => {
-//         if (authWindow?.closed) {
-//           clearInterval(checkWindow);
-//           try {
-//             const res = await apiWithUid('get', '/applications/email/settings/');
-//             if (res.data.gmail_connected) {
-//               setEmailSettings(res.data);
-//               setSuccess('Gmail connected successfully!');
-//               onConnected?.();
-//             } else {
-//               setError('Failed to connect Gmail. Please try again.');
-//             }
-//           } catch {
-//             setError('Failed to verify Gmail connection.');
-//           }
-//         }
-//       }, 1000);
-
-//     } catch (err: any) {
-//       setError(err.message || 'Failed to connect Gmail');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const disconnectGmail = async () => {
-//     if (!user) return;
-
-//     setLoading(true);
-//     setError(null);
-//     setSuccess(null);
-
-//     try {
-//       await apiWithUid('post', '/applications/email/disconnect/');
-//       setEmailSettings({ gmail_connected: false });
-//       setSuccess('Gmail disconnected successfully');
-//       onDisconnected?.();
-//     } catch (err: any) {
-//       setError(err.message || 'Failed to disconnect Gmail');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const processEmails = async () => {
-//     if (!user) return;
-
-//     setLoading(true);
-//     setError(null);
-//     setSuccess(null);
-
-//     try {
-//       await apiWithUid('post', '/applications/email/process/');
-//       setSuccess('Email processing started! Check your applications for updates.');
-//     } catch (err: any) {
-//       setError(err.message || 'Failed to process emails');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   if (fetchingSettings) {
-//     return (
-//       <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
-//         <div className="flex items-center justify-center py-8">
-//           <FiLoader className="animate-spin w-6 h-6 text-purple-400" />
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-6">
-//       <div className="flex items-center gap-3 mb-6">
-//         <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-xl flex items-center justify-center">
-//           <FiMail className="text-blue-400 w-5 h-5" />
-//         </div>
-//         <div className="flex-1">
-//           <h3 className="text-xl font-semibold text-white">Email Integration</h3>
-//           <p className="text-gray-400 text-sm">Connect Gmail to automatically track job application updates</p>
-//         </div>
-//         {emailSettings.gmail_connected && (
-//           <div className="flex items-center gap-2 px-3 py-1.5 bg-green-500/20 border border-green-500/30 rounded-full">
-//             <FiCheck className="w-4 h-4 text-green-400" />
-//             <span className="text-green-400 text-sm font-medium">Connected</span>
-//           </div>
-//         )}
-//       </div>
-
-//       {error && (
-//         <div className="bg-red-500/20 border border-red-500/50 text-red-400 p-3 rounded-xl mb-4 flex items-center gap-2">
-//           <FiXCircle className="w-4 h-4" />
-//           {error}
-//         </div>
-//       )}
-
-//       {success && (
-//         <div className="bg-green-500/20 border border-green-500/50 text-green-400 p-3 rounded-xl mb-4 flex items-center gap-2">
-//           <FiCheckCircle className="w-4 h-4" />
-//           {success}
-//         </div>
-//       )}
-
-//       <div className="space-y-4">
-//         {/* Gmail Connection Status */}
-//         <div className="bg-gray-800/40 border border-gray-700/40 rounded-xl p-5">
-//           <div className="flex items-center justify-between mb-4">
-//             <div>
-//               <h4 className="text-white font-semibold mb-1">Gmail Connection</h4>
-//               {emailSettings.gmail_connected ? (
-//                 <div className="space-y-1">
-//                   <p className="text-gray-400 text-sm">
-//                     Your Gmail account is connected and monitoring job-related emails
-//                   </p>
-//                   {emailSettings.connected_email && (
-//                     <p className="text-blue-400 text-sm font-medium">
-//                       Connected as: {emailSettings.connected_email}
-//                     </p>
-//                   )}
-//                 </div>
-//               ) : (
-//                 <p className="text-gray-400 text-sm">
-//                   Connect your Gmail to automatically detect job application updates, interview invitations, and rejection emails
-//                 </p>
-//               )}
-//             </div>
-//             <div className="flex items-center gap-2">
-//               <div className={`w-3 h-3 rounded-full ${emailSettings.gmail_connected ? 'bg-green-400' : 'bg-gray-500'}`} />
-//               <span className={`text-sm font-medium ${emailSettings.gmail_connected ? 'text-green-400' : 'text-gray-400'}`}>
-//                 {emailSettings.gmail_connected ? 'Connected' : 'Disconnected'}
-//               </span>
-//             </div>
-//           </div>
-          
-//           <div className="flex gap-3">
-//             {!emailSettings.gmail_connected ? (
-//               <button
-//                 onClick={connectGmail}
-//                 disabled={loading}
-//                 className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-blue-600/50 disabled:to-blue-700/50 text-white rounded-xl transition-all duration-200 text-sm font-medium shadow-lg shadow-blue-600/25"
-//               >
-//                 {loading ? <FiLoader className="animate-spin w-4 h-4" /> : <FiLink className="w-4 h-4" />}
-//                 Connect Gmail
-//               </button>
-//             ) : (
-//               <button
-//                 onClick={disconnectGmail}
-//                 disabled={loading}
-//                 className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-red-600/50 disabled:to-red-700/50 text-white rounded-xl transition-all duration-200 text-sm font-medium shadow-lg shadow-red-600/25"
-//               >
-//                 {loading ? <FiLoader className="animate-spin w-4 h-4" /> : <FiXCircle className="w-4 h-4" />}
-//                 Disconnect Gmail
-//               </button>
-//             )}
-//           </div>
-//         </div>
-
-//         {/* Manual Processing - Only show if connected */}
-//         {emailSettings.gmail_connected && (
-//           <div className="bg-gray-800/40 border border-gray-700/40 rounded-xl p-5">
-//             <h4 className="text-white font-semibold mb-2">Manual Sync</h4>
-//             <p className="text-gray-400 text-sm mb-4">
-//               Manually trigger email processing to check for new job-related emails immediately
-//             </p>
-            
-//             <button
-//               onClick={processEmails}
-//               disabled={loading}
-//               className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-purple-600/50 disabled:to-purple-700/50 text-white rounded-xl transition-all duration-200 text-sm font-medium shadow-lg shadow-purple-600/25"
-//             >
-//               {loading ? <FiLoader className="animate-spin w-4 h-4" /> : <FiMail className="w-4 h-4" />}
-//               Sync Emails Now
-//             </button>
-//           </div>
-//         )}
-
-//         {/* How it works */}
-//         <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-5">
-//           <h4 className="text-blue-400 font-semibold mb-3 flex items-center gap-2">
-//             <div className="w-2 h-2 bg-blue-400 rounded-full" />
-//             How Email Integration Works
-//           </h4>
-//           <ul className="text-blue-300/90 text-sm space-y-2">
-//             <li className="flex items-start gap-2">
-//               <div className="w-1.5 h-1.5 bg-blue-400/60 rounded-full mt-2 flex-shrink-0" />
-//               Securely connects to your Gmail using OAuth authentication
-//             </li>
-//             <li className="flex items-start gap-2">
-//               <div className="w-1.5 h-1.5 bg-blue-400/60 rounded-full mt-2 flex-shrink-0" />
-//               Intelligently scans for emails from companies in your application list
-//             </li>
-//             <li className="flex items-start gap-2">
-//               <div className="w-1.5 h-1.5 bg-blue-400/60 rounded-full mt-2 flex-shrink-0" />
-//               Uses AI to detect interview invitations, rejections, and job offers
-//             </li>
-//             <li className="flex items-start gap-2">
-//               <div className="w-1.5 h-1.5 bg-blue-400/60 rounded-full mt-2 flex-shrink-0" />
-//               Automatically updates application status and creates timeline events
-//             </li>
-//             <li className="flex items-start gap-2">
-//               <div className="w-1.5 h-1.5 bg-blue-400/60 rounded-full mt-2 flex-shrink-0" />
-//               Your data remains private and is never stored on our servers
-//             </li>
-//           </ul>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default EmailSettings;
-
-
 import React, { useState, useEffect } from 'react';
 import {
   FiMail,
@@ -526,37 +252,37 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ onConnected, onDisconnect
   };
 
   const getStatusBadge = (status?: string) => {
-    const statusColors = {
-      pending: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-      accepted: 'bg-green-500/20 text-green-400 border-green-500/30',
-      rejected: 'bg-red-500/20 text-red-400 border-red-500/30',
-      interview: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-      default: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
-    };
-    const colorClass = statusColors[status as keyof typeof statusColors] || statusColors.default;
-    return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full border ${colorClass}`}>
-        {status || 'Unknown'}
-      </span>
-    );
+  const statusColors = {
+    pending: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    accepted: 'bg-green-500/20 text-green-400 border-green-500/30',
+    rejected: 'bg-red-500/20 text-red-400 border-red-500/30',
+    interview: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    default: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
   };
+  const colorClass = statusColors[status as keyof typeof statusColors] || statusColors.default;
+  return (
+    <span className={`px-1.5 py-0.5 md:px-2 md:py-1 text-xs font-medium rounded-md md:rounded-full border ${colorClass}`}>
+      {status || 'Unknown'}
+    </span>
+  );
+};
 
-  const getClassificationBadge = (classification?: string) => {
-    const classificationColors = {
-      INTERVIEW: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
-      OFFER: 'bg-green-500/20 text-green-400 border-green-500/30',
-      REJECTION: 'bg-red-500/20 text-red-400 border-red-500/30',
-      FOLLOW_UP: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-      APPLICATION_RECEIVED: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-      default: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
-    };
-    const colorClass = classificationColors[classification as keyof typeof classificationColors] || classificationColors.default;
-    return (
-      <span className={`px-2 py-1 text-xs font-medium rounded-full border ${colorClass}`}>
-        {classification || 'UNCLASSIFIED'}
-      </span>
-    );
+const getClassificationBadge = (classification?: string) => {
+  const classificationColors = {
+    INTERVIEW: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+    OFFER: 'bg-green-500/20 text-green-400 border-green-500/30',
+    REJECTION: 'bg-red-500/20 text-red-400 border-red-500/30',
+    FOLLOW_UP: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    APPLICATION_RECEIVED: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    default: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
   };
+  const colorClass = classificationColors[classification as keyof typeof classificationColors] || classificationColors.default;
+  return (
+    <span className={`px-1.5 py-0.5 md:px-2 md:py-1 text-xs font-medium rounded-md md:rounded-full border ${colorClass}`}>
+      {classification || 'UNCLASSIFIED'}
+    </span>
+  );
+};
 
   const toggleEmailExpansion = (emailId: number) => {
     if (expandedEmailId === emailId) {
@@ -612,224 +338,226 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ onConnected, onDisconnect
   }
 
   const EmailLogList = ({ isModal = false }: { isModal?: boolean }) => (
-    <div className={`space-y-4 ${isModal ? 'max-h-[60vh] overflow-y-auto' : 'max-h-72 overflow-y-auto'}`}>
-      {isModal && (
-        <div className="flex flex-col gap-4 mb-6">
-          <div className="flex flex-wrap gap-3">
-            <div className="flex-1 min-w-64 relative">
-              <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="text"
-                placeholder="Search emails..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-800/60 border border-gray-700/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20"
-              />
-            </div>
-            <select
-              value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
-              className="px-4 py-2.5 bg-gray-800/60 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-purple-500/50"
-            >
-              <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="accepted">Accepted</option>
-              <option value="rejected">Rejected</option>
-              <option value="interview">Interview</option>
-            </select>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="px-4 py-2.5 bg-gray-800/60 border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-purple-500/50"
-            >
-              <option value="date">Sort by Date</option>
-              <option value="sender">Sort by Sender</option>
-              <option value="subject">Sort by Subject</option>
-            </select>
+  <div className={`space-y-3 md:space-y-4 ${isModal ? 'max-h-[60vh] overflow-y-auto' : 'max-h-72 overflow-y-auto'}`}>
+    {isModal && (
+      <div className="flex flex-col gap-3 md:gap-4 mb-4 md:mb-6">
+        <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
+          <div className="flex-1 min-w-0 relative">
+            <FiSearch className="absolute left-2 md:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 md:w-4 md:h-4" />
+            <input
+              type="text"
+              placeholder="Search emails..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-7 md:pl-10 pr-3 md:pr-4 py-2 md:py-2.5 bg-gray-800/60 border border-gray-700/50 rounded-lg md:rounded-xl text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 text-sm md:text-base"
+            />
           </div>
-          <div className="flex gap-4 text-sm text-gray-400">
-            <span>Total: {emailLogs.length}</span>
-            <span>Filtered: {sortedLogs.length}</span>
-            {lastChecked && <span>Last checked: {lastChecked.toLocaleTimeString()}</span>}
-          </div>
-        </div>
-      )}
-      {sortedLogs.length === 0 ? (
-        <div className="text-center py-8">
-          <FiMail className="w-12 h-12 text-gray-500 mx-auto mb-3" />
-          <p className="text-gray-400 text-sm">
-            {emailLogs.length === 0 ? 'No email logs available yet.' : 'No emails match your search criteria.'}
-          </p>
-          {emailLogs.length === 0 && emailSettings.gmail_connected && (
-            <p className="text-gray-500 text-xs mt-2">
-              Try syncing your emails or check back later for updates.
-            </p>
-          )}
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {sortedLogs.map((log) => (
-            <div
-              key={log.id}
-              className={`p-4 bg-gray-900/40 rounded-xl border border-gray-700/30 hover:border-gray-600/50 transition-all duration-200 ${
-                !log.is_read ? 'border-l-4 border-l-purple-500' : ''
-              }`}
-            >
-              <div className="flex items-start justify-between gap-3 mb-3">
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
-                    {log.sender_name.charAt(0).toUpperCase()}
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-300 truncate">{log.sender_name}</p>
-                    <p className="text-xs text-gray-500 truncate">{log.sender_email}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  {log.classification && getClassificationBadge(log.classification)}
-                  {log.status && getStatusBadge(log.status)}
-                  <div className="flex items-center gap-1 text-xs text-gray-500">
-                    <FiClock className="w-3 h-3" />
-                    {formatDate(log.date)}
-                  </div>
-                  <button
-                    onClick={() => openEmailDetails(log)}
-                    className="p-1.5 hover:bg-gray-800/50 rounded-lg transition-colors"
-                    title="View detailed email"
-                  >
-                    <FiMaximize2 className="w-4 h-4 text-gray-400 hover:text-purple-400" />
-                  </button>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <h4 className="text-white font-medium text-sm line-clamp-2">{log.subject}</h4>
-                {expandedEmailId === log.id ? (
-                  <div className="text-gray-400 text-xs bg-gray-800/50 p-3 rounded-lg">
-                    {log.full_content ? (
-                      <div dangerouslySetInnerHTML={{ __html: log.full_content }} />
-                    ) : (
-                      <div className="flex items-center justify-center py-4">
-                        <FiLoader className="animate-spin w-4 h-4 mr-2" />
-                        Loading content...
-                      </div>
-                    )}
-                    <button
-                      onClick={() => toggleEmailExpansion(log.id)}
-                      className="mt-3 flex items-center gap-1 text-purple-400 hover:text-purple-300 text-xs"
-                    >
-                      <FiEyeOff className="w-3 h-3" />
-                      Hide content
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-gray-400 text-xs line-clamp-2">{log.snippet}</p>
-                    <button
-                      onClick={() => toggleEmailExpansion(log.id)}
-                      className="flex items-center gap-1 text-purple-400 hover:text-purple-300 text-xs"
-                    >
-                      <FiEye className="w-3 h-3" />
-                      View full content
-                    </button>
-                  </>
-                )}
-              </div>
-              <div className="mt-3 pt-3 border-t border-gray-700/30 flex justify-between items-center">
-                {log.application_id && (
-                  <div className="flex items-center gap-2">
-                    <FiFileText className="w-3 h-3 text-purple-400" />
-                    <span className="text-xs text-purple-400">Application #{log.application_id}</span>
-                    <FiExternalLink className="w-3 h-3 text-gray-500" />
-                  </div>
-                )}
-                {log.confidence_score !== undefined && (
-                  <div className="flex items-center gap-1 text-xs text-gray-500">
-                    <FiAlertTriangle className="w-3 h-3" />
-                    Confidence: {formatConfidenceScore(log.confidence_score)}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
-  const EmailDetailModal = () => (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 border border-gray-700 rounded-2xl w-full max-w-3xl max-h-[80vh] flex flex-col">
-        <div className="flex items-center justify-between p-6 border-b border-gray-700">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-              <FiMail className="text-white w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold text-white">Email Details</h2>
-              <p className="text-gray-400 text-sm">Detailed view of your email</p>
-            </div>
-          </div>
-          <button
-            onClick={() => setShowDetailModal(false)}
-            className="p-2 hover:bg-gray-800 text-gray-400 hover:text-white rounded-lg transition-colors"
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-2 md:px-4 py-2 md:py-2.5 bg-gray-800/60 border border-gray-700/50 rounded-lg md:rounded-xl text-white focus:outline-none focus:border-purple-500/50 text-xs md:text-base min-w-0 flex-shrink-0"
           >
-            <FiX className="w-5 h-5" />
-          </button>
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+            <option value="interview">Interview</option>
+          </select>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-2 md:px-4 py-2 md:py-2.5 bg-gray-800/60 border border-gray-700/50 rounded-lg md:rounded-xl text-white focus:outline-none focus:border-purple-500/50 text-xs md:text-base min-w-0 flex-shrink-0"
+          >
+            <option value="date">Sort by Date</option>
+            <option value="sender">Sort by Sender</option>
+            <option value="subject">Sort by Subject</option>
+          </select>
         </div>
-        <div className="flex-1 overflow-y-auto p-6">
-          {selectedEmail ? (
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-lg font-semibold">
-                  {selectedEmail.sender_name.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <p className="text-white font-medium">{selectedEmail.sender_name}</p>
-                  <p className="text-gray-400 text-sm">{selectedEmail.sender_email}</p>
-                </div>
-              </div>
-              <div className="border-t border-gray-700/30 pt-4">
-                <h3 className="text-white font-semibold text-lg">{selectedEmail.subject}</h3>
-                <div className="flex items-center gap-4 mt-2">
-                  {selectedEmail.classification && getClassificationBadge(selectedEmail.classification)}
-                  {selectedEmail.status && getStatusBadge(selectedEmail.status)}
-                  <div className="flex items-center gap-1 text-sm text-gray-500">
-                    <FiClock className="w-4 h-4" />
-                    {formatDate(selectedEmail.date)}
-                  </div>
-                </div>
-              </div>
-              {selectedEmail.application_id && (
-                <div className="flex items-center gap-2 text-sm text-purple-400">
-                  <FiFileText className="w-4 h-4" />
-                  Application #{selectedEmail.application_id}
-                  <FiExternalLink className="w-4 h-4 text-gray-500" />
-                </div>
-              )}
-              {selectedEmail.confidence_score !== undefined && (
-                <div className="flex items-center gap-1 text-sm text-gray-500">
-                  <FiAlertTriangle className="w-4 h-4" />
-                  Confidence: {formatConfidenceScore(selectedEmail.confidence_score)}
-                </div>
-              )}
-              <div className="mt-4 p-4 bg-gray-800/50 rounded-lg text-gray-300 text-sm">
-                {selectedEmail.full_content ? (
-                  <div dangerouslySetInnerHTML={{ __html: selectedEmail.full_content }} />
-                ) : (
-                  <div className="flex items-center justify-center py-4">
-                    <FiLoader className="animate-spin w-5 h-5 mr-2" />
-                    Loading content...
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-400">No email selected</p>
-          )}
+        <div className="flex flex-wrap gap-2 md:gap-4 text-xs md:text-sm text-gray-400">
+          <span>Total: {emailLogs.length}</span>
+          <span>Filtered: {sortedLogs.length}</span>
+          {lastChecked && <span className="hidden sm:inline">Last checked: {lastChecked.toLocaleTimeString()}</span>}
         </div>
       </div>
+    )}
+    {sortedLogs.length === 0 ? (
+      <div className="text-center py-6 md:py-8">
+        <FiMail className="w-8 h-8 md:w-12 md:h-12 text-gray-500 mx-auto mb-2 md:mb-3" />
+        <p className="text-gray-400 text-xs md:text-sm">
+          {emailLogs.length === 0 ? 'No email logs available yet.' : 'No emails match your search criteria.'}
+        </p>
+        {emailLogs.length === 0 && emailSettings.gmail_connected && (
+          <p className="text-gray-500 text-xs mt-1 md:mt-2">
+            Try syncing your emails or check back later for updates.
+          </p>
+        )}
+      </div>
+    ) : (
+      <div className="space-y-2 md:space-y-3">
+        {sortedLogs.map((log) => (
+          <div
+            key={log.id}
+            className={`p-3 md:p-4 bg-gray-900/40 rounded-lg md:rounded-xl border border-gray-700/30 hover:border-gray-600/50 transition-all duration-200 ${
+              !log.is_read ? 'border-l-2 md:border-l-4 border-l-purple-500' : ''
+            }`}
+          >
+            <div className="flex items-start justify-between gap-2 md:gap-3 mb-2 md:mb-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xs md:text-sm font-semibold flex-shrink-0">
+                  {log.sender_name.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs md:text-sm font-medium text-gray-300 truncate">{log.sender_name}</p>
+                  <p className="text-xs text-gray-500 truncate">{log.sender_email}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 md:gap-2 shrink-0 flex-wrap">
+                {log.classification && getClassificationBadge(log.classification)}
+                {log.status && getStatusBadge(log.status)}
+                <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <FiClock className="w-2 h-2 md:w-3 md:h-3" />
+                  <span className="hidden sm:inline">{formatDate(log.date)}</span>
+                  <span className="sm:hidden">{new Date(log.date || '').toLocaleDateString()}</span>
+                </div>
+                <button
+                  onClick={() => openEmailDetails(log)}
+                  className="p-1 md:p-1.5 hover:bg-gray-800/50 rounded transition-colors"
+                  title="View detailed email"
+                >
+                  <FiMaximize2 className="w-3 h-3 md:w-4 md:h-4 text-gray-400 hover:text-purple-400" />
+                </button>
+              </div>
+            </div>
+            <div className="space-y-1 md:space-y-2">
+              <h4 className="text-white font-medium text-xs md:text-sm line-clamp-2">{log.subject}</h4>
+              {expandedEmailId === log.id ? (
+                <div className="text-gray-400 text-xs bg-gray-800/50 p-2 md:p-3 rounded-md md:rounded-lg">
+                  {log.full_content ? (
+                    <div dangerouslySetInnerHTML={{ __html: log.full_content }} />
+                  ) : (
+                    <div className="flex items-center justify-center py-2 md:py-4">
+                      <FiLoader className="animate-spin w-3 h-3 md:w-4 md:h-4 mr-1 md:mr-2" />
+                      <span className="text-xs md:text-sm">Loading content...</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => toggleEmailExpansion(log.id)}
+                    className="mt-2 md:mt-3 flex items-center gap-1 text-purple-400 hover:text-purple-300 text-xs"
+                  >
+                    <FiEyeOff className="w-2 h-2 md:w-3 md:h-3" />
+                    Hide content
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <p className="text-gray-400 text-xs line-clamp-2">{log.snippet}</p>
+                  <button
+                    onClick={() => toggleEmailExpansion(log.id)}
+                    className="flex items-center gap-1 text-purple-400 hover:text-purple-300 text-xs"
+                  >
+                    <FiEye className="w-2 h-2 md:w-3 md:h-3" />
+                    View full content
+                  </button>
+                </>
+              )}
+            </div>
+            <div className="mt-2 md:mt-3 pt-2 md:pt-3 border-t border-gray-700/30 flex flex-col sm:flex-row sm:justify-between gap-1 md:gap-2">
+              {log.application_id && (
+                <div className="flex items-center gap-1 md:gap-2">
+                  <FiFileText className="w-2 h-2 md:w-3 md:h-3 text-purple-400" />
+                  <span className="text-xs text-purple-400">App #{log.application_id}</span>
+                  <FiExternalLink className="w-2 h-2 md:w-3 md:h-3 text-gray-500" />
+                </div>
+              )}
+              {log.confidence_score !== undefined && (
+                <div className="flex items-center gap-1 text-xs text-gray-500">
+                  <FiAlertTriangle className="w-2 h-2 md:w-3 md:h-3" />
+                  Confidence: {formatConfidenceScore(log.confidence_score)}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
+
+  const EmailDetailModal = () => (
+  <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 md:p-4">
+    <div className="bg-gray-900 border border-gray-700 rounded-xl md:rounded-2xl w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl max-h-[90vh] md:max-h-[80vh] flex flex-col mx-2 md:mx-0">
+      <div className="flex items-center justify-between p-3 md:p-6 border-b border-gray-700">
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg md:rounded-xl flex items-center justify-center">
+            <FiMail className="text-white w-3 h-3 md:w-5 md:h-5" />
+          </div>
+          <div>
+            <h2 className="text-lg md:text-xl font-semibold text-white">Email Details</h2>
+            <p className="text-gray-400 text-xs md:text-sm">Detailed view of your email</p>
+          </div>
+        </div>
+        <button
+          onClick={() => setShowDetailModal(false)}
+          className="p-1 md:p-2 hover:bg-gray-800 text-gray-400 hover:text-white rounded-md md:rounded-lg transition-colors"
+        >
+          <FiX className="w-4 h-4 md:w-5 md:h-5" />
+        </button>
+      </div>
+      <div className="flex-1 overflow-y-auto p-3 md:p-6">
+        {selectedEmail ? (
+          <div className="space-y-3 md:space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-base md:text-lg font-semibold">
+                {selectedEmail.sender_name.charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p className="text-white font-medium text-sm md:text-base">{selectedEmail.sender_name}</p>
+                <p className="text-gray-400 text-xs md:text-sm">{selectedEmail.sender_email}</p>
+              </div>
+            </div>
+            <div className="border-t border-gray-700/30 pt-3 md:pt-4">
+              <h3 className="text-white font-semibold text-base md:text-lg leading-tight">{selectedEmail.subject}</h3>
+              <div className="flex flex-wrap items-center gap-2 md:gap-4 mt-2">
+                {selectedEmail.classification && getClassificationBadge(selectedEmail.classification)}
+                {selectedEmail.status && getStatusBadge(selectedEmail.status)}
+                <div className="flex items-center gap-1 text-xs md:text-sm text-gray-500">
+                  <FiClock className="w-3 h-3 md:w-4 md:h-4" />
+                  {formatDate(selectedEmail.date)}
+                </div>
+              </div>
+            </div>
+            {selectedEmail.application_id && (
+              <div className="flex items-center gap-1 md:gap-2 text-xs md:text-sm text-purple-400">
+                <FiFileText className="w-3 h-3 md:w-4 md:h-4" />
+                Application #{selectedEmail.application_id}
+                <FiExternalLink className="w-3 h-3 md:w-4 md:h-4 text-gray-500" />
+              </div>
+            )}
+            {selectedEmail.confidence_score !== undefined && (
+              <div className="flex items-center gap-1 text-xs md:text-sm text-gray-500">
+                <FiAlertTriangle className="w-3 h-3 md:w-4 md:h-4" />
+                Confidence: {formatConfidenceScore(selectedEmail.confidence_score)}
+              </div>
+            )}
+            <div className="mt-3 md:mt-4 p-3 md:p-4 bg-gray-800/50 rounded-lg text-gray-300 text-xs md:text-sm">
+              {selectedEmail.full_content ? (
+                <div dangerouslySetInnerHTML={{ __html: selectedEmail.full_content }} />
+              ) : (
+                <div className="flex items-center justify-center py-3 md:py-4">
+                  <FiLoader className="animate-spin w-4 h-4 md:w-5 md:h-5 mr-2" />
+                  <span>Loading content...</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <p className="text-gray-400 text-sm md:text-base">No email selected</p>
+        )}
+      </div>
     </div>
-  );
+  </div>
+);
 
   return (
     <>

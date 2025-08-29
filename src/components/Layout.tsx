@@ -208,7 +208,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FiMenu, FiX, FiHome, FiBriefcase, FiBarChart2, FiPlus, FiLogOut, FiUser, FiSearch } from 'react-icons/fi';
+import { FiMenu, FiX, FiHome, FiBriefcase, FiBarChart2, FiPlus, FiLogOut, FiUser, FiSearch, FiSettings  } from 'react-icons/fi';
 import { auth } from '../lib/firebase'; // Adjust the import path to your Firebase config
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { Briefcase } from "lucide-react";
@@ -257,7 +257,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { text: 'Analytics', path: '/analytics', icon: <FiBarChart2 className="w-5 h-5" /> },
     { text: 'Job SearchPage', path: '/JobSearchPage', icon: <FiSearch className="w-5 h-5" /> },
     { text: 'Add Application', path: '/add-application', icon: <FiPlus className="w-5 h-5" /> },
-    { text: 'settings', path: '/settings', icon: <FiPlus className="w-5 h-5" /> },
+    { text: 'settings', path: '/settings', icon: <FiSettings  className="w-5 h-5" /> },
   ];
 
   // Show loading state while checking authentication

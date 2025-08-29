@@ -357,14 +357,14 @@ export default function LoginPage() {
             </div>
 
             {/* Google sign in */}
-            <button
+            {/* <button
               onClick={onGoogle}
               disabled={loading}
               className="w-full flex items-center justify-center gap-3 py-4 px-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               <FcGoogle className="w-5 h-5" />
               <span className="font-medium">Continue with Google</span>
-            </button>
+            </button> */}
 
             {/* Links */}
             <div className="mt-8 space-y-4 text-center">

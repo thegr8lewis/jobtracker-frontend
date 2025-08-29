@@ -398,6 +398,7 @@ export interface CreateJobFilterData {
 }
 
 export interface UserEmailSettings {
+  connected_email: string | undefined;
   email_tracking_enabled: boolean;
   gmail_connected: boolean;
   auto_process_emails: boolean;
