@@ -121,31 +121,33 @@ import { FiSettings, FiShield, FiBell } from 'react-icons/fi';
 const SettingsPage: React.FC = () => {
   return (
     <Layout>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      <div className="min-h-screen bg-gray-900 text-gray-100 px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-xl sm:rounded-2xl flex items-center justify-center">
-            <FiSettings className="text-purple-400 w-5 h-5 sm:w-6 sm:h-6" />
-          </div>
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-white">Settings</h1>
-            <p className="text-gray-400 text-sm sm:text-base">Manage your account preferences and integrations</p>
+        <div className="max-w-7xl mx-auto mb-8 sm:mb-12">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-600/30 to-indigo-600/30 rounded-xl flex items-center justify-center transition-transform hover:scale-105">
+              <FiSettings className="text-purple-400 w-6 h-6 sm:w-7 sm:h-7" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Settings</h1>
+              <p className="text-sm sm:text-base text-gray-400 mt-1 sm:mt-2">Customize your account preferences and integrations</p>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 sm:gap-8">
           {/* Navigation */}
-          <div className="lg:col-span-1">
-            <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-              <h3 className="text-white font-semibold text-base sm:text-lg mb-3 sm:mb-4">Preferences</h3>
-              <nav className="space-y-1 sm:space-y-2">
-                <button className="w-full text-left px-3 py-2 text-sm sm:text-base bg-purple-600/20 text-purple-400 rounded-lg sm:rounded-xl">
+          <div className="w-full lg:w-80">
+            <div className="bg-gray-800/50 backdrop-blur-md border border-gray-700/30 rounded-2xl p-4 sm:p-6 sticky top-4">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">Preferences</h3>
+              <nav className="space-y-2">
+                <button className="w-full text-left px-4 py-2.5 sm:py-3 bg-purple-600/30 text-purple-300 rounded-lg font-medium text-sm sm:text-base hover:bg-purple-600/50 hover:text-purple-200 transition-all duration-200">
                   Email Integration
                 </button>
-                <button className="w-full text-left px-3 py-2 text-sm sm:text-base text-gray-400 hover:text-white hover:bg-gray-700/30 rounded-lg sm:rounded-xl transition-colors">
+                <button className="w-full text-left px-4 py-2.5 sm:py-3 text-gray-300 rounded-lg font-medium text-sm sm:text-base hover:bg-gray-700/50 hover:text-white transition-all duration-200">
                   Notifications
                 </button>
-                <button className="w-full text-left px-3 py-2 text-sm sm:text-base text-gray-400 hover:text-white hover:bg-gray-700/30 rounded-lg sm:rounded-xl transition-colors">
+                <button className="w-full text-left px-4 py-2.5 sm:py-3 text-gray-300 rounded-lg font-medium text-sm sm:text-base hover:bg-gray-700/50 hover:text-white transition-all duration-200">
                   Privacy & Security
                 </button>
               </nav>
@@ -153,66 +155,66 @@ const SettingsPage: React.FC = () => {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+          <div className="flex-1 space-y-6 sm:space-y-8">
             <EmailSettings />
             
             {/* Notifications Settings */}
-            <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-              <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-lg sm:rounded-xl flex items-center justify-center">
-                  <FiBell className="text-green-400 w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="bg-gray-800/50 backdrop-blur-md border border-gray-700/30 rounded-2xl p-4 sm:p-6">
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-600/30 to-emerald-600/30 rounded-lg flex items-center justify-center transition-transform hover:scale-105">
+                  <FiBell className="text-green-400 w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-white">Notifications</h3>
-                  <p className="text-gray-400 text-xs sm:text-sm">Manage how you receive updates</p>
+                  <h3 className="text-lg sm:text-xl font-semibold">Notifications</h3>
+                  <p className="text-sm sm:text-base text-gray-400 mt-1">Manage how you receive updates</p>
                 </div>
               </div>
 
-              <div className="space-y-3 sm:space-y-4">
-                <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-800/30 border border-gray-700/30 rounded-lg sm:rounded-xl">
-                  <div className="flex-1 min-w-0 mr-3">
-                    <h4 className="text-white font-medium text-sm sm:text-base">Email Notifications</h4>
-                    <p className="text-gray-400 text-xs sm:text-sm truncate">Receive email updates about application status changes</p>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-800/30 border border-gray-700/30 rounded-lg transition-all hover:bg-gray-800/50">
+                  <div className="mb-3 sm:mb-0">
+                    <h4 className="text-base sm:text-lg font-medium">Email Notifications</h4>
+                    <p className="text-sm text-gray-400">Receive email updates about application status changes</p>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                  <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-9 h-5 sm:w-11 sm:h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 sm:after:h-5 sm:after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                    <div className="w-10 h-5 sm:w-11 sm:h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 sm:h-5 sm:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                   </label>
                 </div>
 
-                <div className="flex items-center justify-between p-3 sm:p-4 bg-gray-800/30 border border-gray-700/30 rounded-lg sm:rounded-xl">
-                  <div className="flex-1 min-w-0 mr-3">
-                    <h4 className="text-white font-medium text-sm sm:text-base">Push Notifications</h4>
-                    <p className="text-gray-400 text-xs sm:text-sm truncate">Get browser notifications for important updates</p>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-gray-800/30 border border-gray-700/30 rounded-lg transition-all hover:bg-gray-800/50">
+                  <div className="mb-3 sm:mb-0">
+                    <h4 className="text-base sm:text-lg font-medium">Push Notifications</h4>
+                    <p className="text-sm text-gray-400">Get browser notifications for important updates</p>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                  <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" defaultChecked />
-                    <div className="w-9 h-5 sm:w-11 sm:h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 sm:after:h-5 sm:after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                    <div className="w-10 h-5 sm:w-11 sm:h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 sm:h-5 sm:w-5 after:transition-all peer-checked:bg-purple-600"></div>
                   </label>
                 </div>
               </div>
             </div>
 
             {/* Privacy Settings */}
-            <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6">
-              <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-lg sm:rounded-xl flex items-center justify-center">
-                  <FiShield className="text-red-400 w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="bg-gray-800/50 backdrop-blur-md border border-gray-700/30 rounded-2xl p-4 sm:p-6">
+              <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-600/30 to-pink-600/30 rounded-lg flex items-center justify-center transition-transform hover:scale-105">
+                  <FiShield className="text-red-400 w-5 h-5 sm:w-6 sm:h-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg sm:text-xl font-semibold text-white">Privacy & Security</h3>
-                  <p className="text-gray-400 text-xs sm:text-sm">Manage your data and privacy settings</p>
+                  <h3 className="text-lg sm:text-xl font-semibold">Privacy & Security</h3>
+                  <p className="text-sm sm:text-base text-gray-400 mt-1">Manage your data and privacy settings</p>
                 </div>
               </div>
 
-              <div className="space-y-3 sm:space-y-4">
-                <div className="p-3 sm:p-4 bg-gray-800/30 border border-gray-700/30 rounded-lg sm:rounded-xl">
-                  <h4 className="text-white font-medium text-sm sm:text-base mb-1 sm:mb-2">Data Usage</h4>
-                  <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
+              <div className="space-y-4">
+                <div className="p-4 bg-gray-800/30 border border-gray-700/30 rounded-lg transition-all hover:bg-gray-800/50">
+                  <h4 className="text-base sm:text-lg font-medium mb-2">Data Usage</h4>
+                  <p className="text-sm text-gray-400 mb-4">
                     Your email data is processed securely and never stored on our servers. 
                     We only access emails related to your job applications.
                   </p>
-                  <button className="px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg sm:rounded-xl text-xs sm:text-sm transition-colors">
+                  <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors duration-200">
                     Delete All Data
                   </button>
                 </div>
