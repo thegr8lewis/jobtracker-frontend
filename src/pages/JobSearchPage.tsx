@@ -79,34 +79,71 @@ const JobSearchPage: React.FC = () => {
     }
   }
 
-  const saveJobFilter = async () => {
-    try {
-      setError(null)
+//   const saveJobFilter = async () => {
+//     try {
+//       setError(null)
       
-      // Get the current user UID
-      const auth = getAuth();
-      const user = auth.currentUser;
-      const user_uid = user?.uid || "unknown";
+//       // Get the current user UID
+//       const auth = getAuth();
+//       const user = auth.currentUser;
+//       const user_uid = user?.uid || "unknown";
       
-      await jobAPI.createFilter({
-        ...newFilter,
-        // user_uid
-      })
+//       await jobAPI.createFilter({
+//         ...newFilter,
+//         // user_uid
+//       })
       
-      setShowFilterDialog(false)
-      setNewFilter({
-        keywords: [],
-        locations: [],
-        salary_min: 0,
-        remote_only: false,
-        providers: ["jooble", "adzuna"],
-      })
-      fetchJobFilters()
-    } catch (err: any) {
-      console.error("Error saving filter:", err)
-      setError(err.response?.data?.message || err.message || "Failed to save filter")
+//       setShowFilterDialog(false)
+//       setNewFilter({
+//         keywords: [],
+//         locations: [],
+//         salary_min: 0,
+//         remote_only: false,
+//         providers: ["jooble", "adzuna"],
+//       })
+//       fetchJobFilters()
+//     } catch (err: any) {
+//       console.error("Error saving filter:", err)
+//       setError(err.response?.data?.message || err.message || "Failed to save filter")
+//     }
+//   }
+const saveJobFilter = async () => {
+  try {
+    setError(null);
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const user_uid = user?.uid;
+
+    if (!user_uid) {
+      setError("You must be logged in to save a filter");
+      return;
     }
+
+    const payload = {
+      ...newFilter,
+      user_uid,  // include it here
+    };
+
+    console.log("Saving filter with payload:", payload);
+
+    await jobAPI.createFilter(payload);
+
+    setShowFilterDialog(false);
+    setNewFilter({
+      keywords: [],
+      locations: [],
+      salary_min: 0,
+      remote_only: false,
+      providers: ["jooble", "adzuna"],
+    });
+    fetchJobFilters();
+  } catch (err: any) {
+    console.error("Error saving filter:", err);
+    setError(err.response?.data?.message || err.message || "Failed to save filter");
   }
+};
+
 
   const deleteJobFilter = async (filterId: number) => {
     try {
@@ -220,7 +257,7 @@ const JobSearchPage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-900">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 space-y-6 sm:space-y-8">
           {error && (
             <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-500/10 to-rose-500/10 border border-red-500/20 backdrop-blur-sm">
@@ -245,14 +282,7 @@ const JobSearchPage: React.FC = () => {
           <div className="flex flex-col gap-4 sm:gap-6">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6">
               <div>
-                <button
-                  onClick={() => router.push("/pipeline")}
-                  className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-lg sm:rounded-xl bg-white/5 hover:bg-white/10 text-white/70 hover:text-white transition-all duration-200 border border-white/10 hover:border-white/20 self-start mb-4"
-                >
-                  <FiArrowLeft className="w-3 h-3 sm:w-4 sm:h-4" />
-                  <span className="font-medium text-sm sm:text-base">Back to Pipeline</span>
-                </button>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
+                 <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1 sm:mb-2">
                   Job Search
                 </h1>
                 <p className="text-white/60 text-sm sm:text-base md:text-lg">Discover new opportunities</p>
